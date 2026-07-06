@@ -139,7 +139,16 @@ function calculateEMI(event) {
   // Show results section
   document.getElementById('emi-placeholder').style.display = 'none';
   document.getElementById('emi-active-section').style.display = 'block';
-  document.getElementById('emi-output-val').textContent = `₹${emi.toFixed(2)}`;
+  
+  if (document.getElementById('emi-result-val')) {
+    document.getElementById('emi-result-val').textContent = `₹${emi.toFixed(2)}`;
+  }
+  if (document.getElementById('emi-result-amount')) {
+    document.getElementById('emi-result-amount').textContent = `₹${principal}`;
+  }
+  if (document.getElementById('emi-result-rate')) {
+    document.getElementById('emi-result-rate').textContent = `${rate}%`;
+  }
   
   // Build schedule
   const tableBody = document.querySelector('#emi-schedule-table tbody');
@@ -250,15 +259,21 @@ function checkEligibility(event) {
   localStorage.setItem('finewise_analysis', JSON.stringify(currentAnalysis));
   
   // Render Dashboard
-  document.getElementById('dash-eligible-amount').textContent = `₹${eligibleAmount.toLocaleString('en-IN')}`;
-  
-  const statusBadge = document.getElementById('dash-eligibility-badge');
-  statusBadge.className = `stat-value badge ${badgeClass}`;
-  statusBadge.textContent = status;
-  
-  const riskBadge = document.getElementById('dash-risk-badge');
-  riskBadge.className = `stat-value badge ${riskBadgeClass}`;
-  riskBadge.textContent = riskCategory;
+  const resTitleEl = document.getElementById('eligibility-result-title');
+  if (resTitleEl) {
+    resTitleEl.innerHTML = allRulesPass 
+      ? `Loan Approved <i class="fa-solid fa-square-check" style="color: #4ade80;"></i>`
+      : `Loan Rejected <i class="fa-solid fa-square-xmark" style="color: #f87171;"></i>`;
+  }
+  if (document.getElementById('eligibility-result-name')) {
+    document.getElementById('eligibility-result-name').textContent = name;
+  }
+  if (document.getElementById('eligibility-result-risk')) {
+    document.getElementById('eligibility-result-risk').textContent = riskCategory;
+  }
+  if (document.getElementById('eligibility-result-amount')) {
+    document.getElementById('eligibility-result-amount').textContent = `₹${eligibleAmount}`;
+  }
   
   // Populate checklist HTML
   const checklistEl = document.getElementById('rule-checklist-list');
@@ -390,11 +405,20 @@ function analyzeCredit(event) {
   localStorage.setItem('elected_credit_score', score);
   
   // Update UI
-  document.getElementById('dash-credit-value').textContent = score;
-  const rBadge = document.getElementById('dash-credit-risk-badge');
-  rBadge.className = `stat-value badge ${riskClass}`;
-  rBadge.textContent = risk;
-  document.getElementById('dash-credit-risk-sub').textContent = riskSub;
+  const creditTitleEl = document.getElementById('credit-result-title');
+  const creditSubEl = document.getElementById('credit-result-sub');
+  
+  if (creditTitleEl) {
+    let checkMark = risk === 'Poor' 
+      ? `<i class="fa-solid fa-square-xmark" style="color: #f87171;"></i>`
+      : `<i class="fa-solid fa-square-check" style="color: #4ade80;"></i>`;
+    creditTitleEl.innerHTML = `${risk} Credit Score ${checkMark}`;
+  }
+  if (creditSubEl) {
+    if (risk === 'Excellent') creditSubEl.textContent = 'You have very low financial risk.';
+    else if (risk === 'Good') creditSubEl.textContent = 'You have moderate financial risk.';
+    else creditSubEl.textContent = 'You have high financial risk.';
+  }
   
   // Dynamic Advice rendering
   const adviceEl = document.getElementById('dash-credit-recommendation');

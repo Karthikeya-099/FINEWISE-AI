@@ -147,17 +147,12 @@
           </div>
 
           <div id="credit-dashboard-active" style="display: none;">
-            <div class="stats-grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
-              <div class="stat-card">
-                <div class="stat-title">Estimated Credit Score</div>
-                <div class="stat-value text-accent" id="dash-credit-value">700</div>
-                <div class="stat-meta">Approximate FICO score</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-title">Risk Classification</div>
-                <div class="stat-value badge" id="dash-credit-risk-badge">-</div>
-                <div class="stat-meta" id="dash-credit-risk-sub">-</div>
-              </div>
+            <!-- Screenshot Aligned Results Panel -->
+            <div style="background: rgba(10, 14, 26, 0.4); padding: 1.5rem; border-radius: var(--border-radius); border: 1px solid var(--glass-border); margin-bottom: 1.5rem;">
+              <h3 id="credit-result-title" style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary);">
+                <!-- Dynamically populated: Excellent Credit Score ✅ -->
+              </h3>
+              <p id="credit-result-sub" style="font-size: 0.9375rem; color: var(--text-secondary); margin-bottom: 0;">-</p>
             </div>
  
             <!-- Dynamic Recommendations advice -->

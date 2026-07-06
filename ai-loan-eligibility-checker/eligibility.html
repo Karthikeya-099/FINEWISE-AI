@@ -143,27 +143,16 @@
           </div>
 
           <div id="dashboard-active" style="display: none;">
-            <div class="stats-grid" style="grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.5rem;">
-              
-              <!-- Eligible Loan Amount Card -->
-              <div class="stat-card" style="background: rgba(59, 130, 246, 0.04); border-color: rgba(59, 130, 246, 0.15);">
-                <div class="stat-title">Eligible Loan Amount</div>
-                <div class="stat-value text-accent" id="dash-eligible-amount" style="font-size: 2.25rem;">₹0</div>
-                <div class="stat-meta" id="dash-eligible-formula">Formula: Monthly Salary &times; 20</div>
+            <!-- Screenshot Aligned Results Panel -->
+            <div style="background: rgba(10, 14, 26, 0.4); padding: 1.5rem; border-radius: var(--border-radius); border: 1px solid var(--glass-border); margin-bottom: 1.5rem;">
+              <h3 id="eligibility-result-title" style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary);">
+                <!-- Dynamically populated: Loan Approved ✅ / Loan Rejected ❌ -->
+              </h3>
+              <div style="font-size: 0.9375rem; line-height: 1.8; color: var(--text-secondary);">
+                <p><strong>Name:</strong> <span id="eligibility-result-name">-</span></p>
+                <p><strong>Risk Level:</strong> <span id="eligibility-result-risk">-</span></p>
+                <p><strong>Eligible Loan Amount:</strong> <span id="eligibility-result-amount">₹0</span></p>
               </div>
-              
-              <!-- Side-by-side secondary badges -->
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                <div class="stat-card">
-                  <div class="stat-title">Approval Decision</div>
-                  <div class="stat-value badge" id="dash-eligibility-badge" style="font-size: 1rem;">-</div>
-                </div>
-                <div class="stat-card">
-                  <div class="stat-title">CIBIL Risk Tier</div>
-                  <div class="stat-value badge" id="dash-risk-badge" style="font-size: 1rem;">-</div>
-                </div>
-              </div>
-
             </div>
 
             <!-- Rules Validation Ledger -->

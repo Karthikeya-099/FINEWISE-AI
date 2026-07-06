@@ -127,10 +127,15 @@
           </div>
 
           <div id="emi-active-section" style="display: none;">
-            <div class="stat-card" style="margin-bottom: 1.5rem; background: rgba(59, 130, 246, 0.04); border-color: rgba(59, 130, 246, 0.15);">
-              <div class="stat-title">Monthly Installment (EMI)</div>
-              <div class="stat-value text-accent" id="emi-output-val" style="font-size: 2.25rem;">₹0.00</div>
-              <div class="stat-meta">Formula: Reducing Balance</div>
+            <!-- Screenshot Aligned Results Panel -->
+            <div style="background: rgba(10, 14, 26, 0.4); padding: 1.5rem; border-radius: var(--border-radius); border: 1px solid var(--glass-border); margin-bottom: 1.5rem;">
+              <h3 id="emi-result-title" style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-primary);">
+                Monthly EMI: <span id="emi-result-val">₹0.00</span>
+              </h3>
+              <div style="font-size: 0.9375rem; line-height: 1.8; color: var(--text-secondary);">
+                <p><strong>Loan Amount:</strong> <span id="emi-result-amount">₹0</span></p>
+                <p><strong>Interest Rate:</strong> <span id="emi-result-rate">0%</span></p>
+              </div>
             </div>
 
             <h4 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem; text-transform: uppercase; color: var(--text-secondary);">Amortization Breakdown</h4>
