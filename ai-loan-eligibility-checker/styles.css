@@ -214,8 +214,9 @@ body {
 }
 
 .glass-card:hover {
-  border-color: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+  border-color: rgba(59, 130, 246, 0.25);
+  box-shadow: 0 12px 40px 0 rgba(59, 130, 246, 0.15);
+  transform: translateY(-5px);
 }
 
 /* Two Column Form/Result Grid */
@@ -626,4 +627,31 @@ select.form-control option {
   color: var(--text-secondary);
   font-size: 0.9375rem;
   line-height: 1.5;
+}
+
+/* Premium Animations & Micro-Interactions */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 15px 0 rgba(59, 130, 246, 0.15); }
+  50% { box-shadow: 0 0 25px 4px rgba(59, 130, 246, 0.3); }
+  100% { box-shadow: 0 0 15px 0 rgba(59, 130, 246, 0.15); }
+}
+
+.sidebar-logo i {
+  animation: float 4s ease-in-out infinite;
+}
+
+.hero-title {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Glowing diagnostic dashboard state */
+#dashboard-active, #credit-dashboard-active, #emi-active-section {
+  animation: pulse-glow 3s infinite ease-in-out;
+  border-radius: var(--border-radius);
 }
