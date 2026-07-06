@@ -225,8 +225,8 @@ function checkEligibility(event) {
   let riskCategory = 'Very High';
   let riskBadgeClass = 'badge-danger';
   if (score >= 800) { riskCategory = 'Very Low'; riskBadgeClass = 'badge-success'; }
-  else if (score >= 740) { riskCategory = 'Low'; riskBadgeClass = 'badge-success'; }
-  else if (score >= 670) { riskCategory = 'Moderate'; riskBadgeClass = 'badge-warning'; }
+  else if (score >= 720) { riskCategory = 'Low'; riskBadgeClass = 'badge-success'; }
+  else if (score >= 650) { riskCategory = 'Moderate'; riskBadgeClass = 'badge-warning'; }
   else if (score >= 580) { riskCategory = 'High'; riskBadgeClass = 'badge-warning'; }
   
   // Build details list for reasons
