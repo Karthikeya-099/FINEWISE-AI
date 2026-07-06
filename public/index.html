@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finewise AI - Advanced Credit Intelligence & Risk Scoring</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .hero {
+      padding: 6rem 0 4rem;
+      text-align: center;
+      position: relative;
+    }
+    
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #ffffff 30%, #a78bfa 70%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 4rem 0;
+    }
+    
+    .feature-card {
+      text-align: left;
+    }
+    
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #c084fc;
+    }
+    
+    .feature-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .feature-card p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+    }
+    
+    .algorithm-preview {
+      margin-top: 4rem;
+      background: rgba(139, 92, 246, 0.05);
+      border: 1px solid rgba(139, 92, 246, 0.15);
+      border-radius: var(--border-radius);
+      padding: 3rem;
+    }
+    
+    .algo-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    
+    .algo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .algo-factor {
+      background: rgba(10, 14, 26, 0.5);
+      padding: 1.25rem;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid var(--glass-border);
+    }
+    
+    .factor-weight {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #f472b6;
+      margin-bottom: 0.25rem;
+    }
+    
+    .factor-name {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="/" class="logo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2 17L12 22L22 17" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2 12L12 17L22 12" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="logoGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#8B5CF6"/>
+            <stop offset="1" stop-color="#EC4899"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      Finewise AI
+    </a>
+    <div class="nav-links">
+      <a href="/login.html" class="nav-link">Sign In / Register</a>
+      <a href="/login.html" class="btn btn-primary">Launch Dashboard</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Hero Section -->
+    <header class="hero">
+      <h1 class="hero-title">Deep Credit Risk Intelligence</h1>
+      <p class="hero-subtitle">Evaluate risk vectors, determine loan approval ceilings, and connect financial sources using our unified Multi-Factor Creditworthiness Index (MF-CWI) mathematical algorithm.</p>
+      <div style="display: flex; justify-content: center; gap: 1rem;">
+        <a href="/login.html?role=client" class="btn btn-primary">Client Portal</a>
+        <a href="/login.html?role=admin" class="btn btn-secondary">Admin Access</a>
+      </div>
+    </header>
+
+    <!-- Features -->
+    <section class="features-grid">
+      <div class="glass-card feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h3>Confidential Safe Vault</h3>
+        <p>Clients securely log details of financial balances and previous obligations. Database-level constraints ensure bank credentials remain invisible to administrators.</p>
+      </div>
+      
+      <div class="glass-card feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>MF-CWI Analytics</h3>
+        <p>A unified mathematical algorithm analyzing five custom weight dimensions including credit ratings, cash buffers, existing debt levels, and ratios in real-time.</p>
+      </div>
+
+      <div class="glass-card feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Policy Matching</h3>
+        <p>Matches user credentials against leading institution loan policies. Renders custom rates, terms, and approximate monthly payment amounts.</p>
+      </div>
+    </section>
+
+    <!-- Mathematical Model Breakdown -->
+    <section class="glass-card algorithm-preview">
+      <h2 class="algo-title">How the MF-CWI Algorithm Works</h2>
+      <p style="color: var(--text-secondary); text-align: center; max-width: 700px; margin: 0 auto;">
+        Unlike simple scoring models, the **Multi-Factor Creditworthiness Index (MF-CWI)** runs a normalized multi-criteria assessment weight mapping across 5 distinct financial vectors:
+      </p>
+      <div class="algo-grid">
+        <div class="algo-factor">
+          <div class="factor-weight">40%</div>
+          <div class="factor-name">Credit Rating</div>
+        </div>
+        <div class="algo-factor">
+          <div class="factor-weight">25%</div>
+          <div class="factor-name">Debt-to-Income (DTI)</div>
+        </div>
+        <div class="algo-factor">
+          <div class="factor-weight">15%</div>
+          <div class="factor-name">Expense-to-Income</div>
+        </div>
+        <div class="algo-factor">
+          <div class="factor-weight">10%</div>
+          <div class="factor-name">Liquid Cash Buffer</div>
+        </div>
+        <div class="algo-factor">
+          <div class="factor-weight">10%</div>
+          <div class="factor-name">Repayment History</div>
+        </div>
+      </div>
+    </section>
+
+    <footer style="margin-top: 6rem; padding: 2rem 0; border-top: 1px solid var(--glass-border); text-align: center; color: var(--text-secondary); font-size: 0.875rem;">
+      <p>&copy; 2026 Finewise AI. Built using safe data models. All rights reserved.</p>
+    </footer>
+  </div>
+
+</body>
+</html>

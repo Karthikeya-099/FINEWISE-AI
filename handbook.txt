@@ -1,0 +1,131 @@
+================================================================================
+                           FINEWISE AI - PROJECT SUMMARY
+================================================================================
+
+This document provides a concise, plain-text summary of the FineWise AI project.
+Use this file to review the architecture, database schema, formulas, and mock
+interview answers for placements and software engineering reviews.
+
+--------------------------------------------------------------------------------
+1. PROJECT DESCRIPTION
+--------------------------------------------------------------------------------
+FineWise AI is an intelligence-driven personal finance and credit diagnostic application. 
+Unlike standard credit bureaus (which retrospectively look at historical defaults), 
+FineWise AI dynamically calculates a custom Multi-Factor Creditworthiness Index (MF-CWI)
+combining multiple financial parameters.
+
+Core Features:
+* Dynamic client dashboard with automated Chart.js gauge visualizations.
+* Multi-Factor Creditworthiness Index (MF-CWI) mathematical scoring logic.
+* Pre-qualified loan offer matchmaking against partner bank rules.
+* Secure Role-Based access control separating Clients from Administrators.
+* Strict client data privacy separating account details from admin listings.
+
+--------------------------------------------------------------------------------
+2. SYSTEM ARCHITECTURE
+--------------------------------------------------------------------------------
+FineWise AI implements a standard 3-tier monolithic web architecture:
+
+[Browser Frontend] (Static html/css/js served from public/)
+       |
+  REST API (HTTP / JWT auth headers)
+       v
+[Application backend] (Node.js + Express.js API handlers in routes/)
+       |
+  SQLite3 queries (database.js SQL bindings)
+       v
+[Data Store] (SQLite3 file database in finewise.db)
+
+Workspace Folder Structure:
+* server.js          : App main file, configuration variables, API routes mounting.
+* database.js        : Database file connection, DDL table setups, SQL promise helpers.
+* package.json       : Manifest configurations, dependency packages list.
+* middleware/auth.js : JWT middleware (authenticateToken, requireRole checks).
+* routes/auth.js     : Handles login and registration validation paths.
+* routes/client.js   : Client endpoints (financial data, banks logging).
+* routes/admin.js    : Administrative client list directory routes.
+* services/analysis.js: Mathematical CWI scoring engine and matching rules.
+* public/            : Frontend HTML files (index, login, client, admin dashboards).
+
+--------------------------------------------------------------------------------
+3. THE MF-CWI ALGORITHMIC SCORING ENGINE
+--------------------------------------------------------------------------------
+The Creditworthiness Index (CWI) is calculated dynamically using a normalized,
+weighted multi-criteria decision formula:
+
+CWI = (0.40 * sCredit) + (0.25 * sDti) + (0.15 * sExp) + (0.10 * sRes) + (0.10 * sHistory)
+
+Inputs Normalization scale (all factors range from 0.00 to 1.00):
+1. sCredit : Normalizes credit score (300 to 850 scale).
+2. sDti    : Debt-to-Income score (where 0% DTI = 1.0, and >= 60% DTI maps to 0.0).
+3. sExp    : Monthly expenses divided by monthly income (lower expense ratios map to 1.0).
+4. sRes    : Cash reserves compared to 3 months of emergency expenses.
+5. sHistory: Outstanding active liabilities compared to the original principal borrowed.
+
+Risk Category Tiering:
+* CWI >= 0.75 : Low Risk
+* CWI >= 0.50 : Medium Risk
+* CWI <  0.50 : High Risk
+
+Loan Limit Amortization:
+Calculates the maximum allowable monthly payment:
+maxMonthlyPayment = (monthlyIncome * (dtiThreshold * CWI)) - activeMonthlyPayments
+Where dtiThreshold is 45% for credit scores >= 750, 38% for >= 650, and 30% otherwise.
+The final approved limit is calculated using standard 60-month amortization.
+
+--------------------------------------------------------------------------------
+4. SECURE AUTHENTICATION DETAILS (TOGGLE SEPARATION)
+--------------------------------------------------------------------------------
+FineWise AI uses a custom toggle switch to split Client vs Admin access modes:
+* Default state (Toggle OFF): Treated as Client Portal. Authenticates strictly 
+  against client roles. Admin credentials will be rejected.
+* Toggle ON: Treated as Admin Portal. Authenticates strictly against admin roles.
+  Client credentials will be rejected.
+
+Core Security Implementations (routes/auth.js):
+- Password hashing is enforced using bcryptjs (salt rounds = 10).
+- Session authorization is handled via JSON Web Tokens (JWT) signed using a server
+  secret key and sent inside HTTP headers.
+- Prevent SQL injection attacks by using parameterized SQL placeholder queries ('?')
+  instead of string formatting.
+- Client credentials cannot authenticate in the Admin login state, returning:
+  "Client credentials cannot be used in Administrator Login."
+- Admin credentials cannot authenticate in the Client login state, returning:
+  "Administrator credentials cannot be used in Client Login."
+
+--------------------------------------------------------------------------------
+5. CORE SQL DATABASE SCHEMA
+--------------------------------------------------------------------------------
+DDL scripts executed in database.js:
+* users: id (PK), username (unique), password (hashed), role (client/admin).
+* client_profiles: id (PK), user_id (FK), full_name, credit_score, annual_income, 
+  monthly_expenses, requested_loan_amount, loan_purpose.
+* bank_accounts: id (PK), user_id (FK), bank_name, account_number, account_type, 
+  balance, routing_number.
+* previous_loans: id (PK), user_id (FK), lender_name, loan_amount, remaining_balance, 
+  monthly_payment, status.
+* loan_analysis: id (PK), user_id (FK), cwi, risk_score, approved_amount, 
+  debt_to_income_ratio, interest_rate_offered, recommendations (JSON).
+
+--------------------------------------------------------------------------------
+6. TOP TECHNICAL INTERVIEW QUESTIONS & ANSWERS
+--------------------------------------------------------------------------------
+Q: How does the system ensure data isolation and client privacy?
+A: In routes/admin.js, when the administrator requests the clients list, the query
+   only selects client profiles and analysis results. Sensitive bank account rows
+   (like routing numbers, balances, and account numbers) are not queried or sent to
+   the admin interface.
+
+Q: What happens if the database connection throws an error during a user login?
+A: The database operation is enclosed inside a try-catch block. The catch statement
+   logs the precise error to the server terminal, and returns an HTTP 500 error 
+   response with a generic JSON message: { error: "Failed to login." } to prevent
+   server crashes or exposing internal database structures.
+
+Q: Why did you choose JWT for session management?
+A: JWTs are stateless and self-contained, meaning the backend does not need to store 
+   session records in database tables or active Redis instances. The server reads
+   and verifies the client claims (id, username, role) directly from the signature
+   in the request header.
+
+================================================================================
