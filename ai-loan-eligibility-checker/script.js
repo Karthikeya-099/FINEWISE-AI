@@ -444,10 +444,10 @@ function initTipsPage() {
   const profileActive = document.getElementById('tips-profile-active');
   
   if (currentAnalysis) {
-    document.getElementById('tips-net-income').textContent = `$${currentAnalysis.income.toFixed(2)}`;
+    document.getElementById('tips-net-income').textContent = `₹${currentAnalysis.income.toFixed(2)}`;
     document.getElementById('tips-dti-val').textContent = `${(currentAnalysis.dti * 100).toFixed(1)}%`;
     document.getElementById('tips-credit-val').textContent = currentAnalysis.creditScore;
-    document.getElementById('tips-amount-val').textContent = `$${currentAnalysis.amount.toLocaleString()}`;
+    document.getElementById('tips-amount-val').textContent = `₹${currentAnalysis.amount.toLocaleString()}`;
     
     // Status Badges
     const rBadge = document.getElementById('tips-risk-badge');
@@ -486,12 +486,12 @@ async function generateAIAudit() {
   const systemPrompt = "You are a professional credit risk underwriter and financial planner. Review the client's financial details and output a structured financial diagnostic audit. Outline positive factors, risk liabilities, and action items.";
   const prompt = `Client Diagnostic Details:
 - Name: ${currentAnalysis.name}
-- Monthly Income: $${currentAnalysis.income}
-- Basic Monthly Expenses: $${currentAnalysis.expenses}
+- Monthly Income: ₹${currentAnalysis.income}
+- Basic Monthly Expenses: ₹${currentAnalysis.expenses}
 - Credit Score: ${currentAnalysis.creditScore}
-- Existing Loan EMIs: $${currentAnalysis.existingEmi}
-- Requested Loan Amount: $${currentAnalysis.amount} for ${currentAnalysis.tenure} months at ${currentAnalysis.rate}% interest.
-- Calculated Proposed Monthly EMI: $${currentAnalysis.proposedEmi.toFixed(2)}
+- Existing Loan EMIs: ₹${currentAnalysis.existingEmi}
+- Requested Loan Amount: ₹${currentAnalysis.amount} for ${currentAnalysis.tenure} months at ${currentAnalysis.rate}% interest.
+- Calculated Proposed Monthly EMI: ₹${currentAnalysis.proposedEmi.toFixed(2)}
 - Calculated Debt-to-Income (DTI) Ratio: ${(currentAnalysis.dti * 100).toFixed(2)}%
 - Eligibility Assessment: ${currentAnalysis.status} (${currentAnalysis.reason})
 - Credit Risk Classification: ${currentAnalysis.riskCategory}`;
@@ -520,12 +520,12 @@ async function handleChatSubmit(event) {
   if (currentAnalysis) {
     context = `Client Financial Metrics:
 - Name: ${currentAnalysis.name}
-- Income: $${currentAnalysis.income}/mo
+- Income: ₹${currentAnalysis.income}/mo
 - Credit Rating Score: ${currentAnalysis.creditScore}
-- Expenses: $${currentAnalysis.expenses}/mo
-- Existing EMIs: $${currentAnalysis.existingEmi}/mo
-- Requested Loan Amount: $${currentAnalysis.amount}
-- Calculated proposed EMI: $${currentAnalysis.proposedEmi.toFixed(2)}
+- Expenses: ₹${currentAnalysis.expenses}/mo
+- Existing EMIs: ₹${currentAnalysis.existingEmi}/mo
+- Requested Loan Amount: ₹${currentAnalysis.amount}
+- Calculated proposed EMI: ₹${currentAnalysis.proposedEmi.toFixed(2)}
 - Eligibility status: ${currentAnalysis.status}
 - Credit risk category: ${currentAnalysis.riskCategory}`;
   }
@@ -627,10 +627,10 @@ function getOfflineAISimulation(prompt) {
       adviceText = `**Strengths:**
 - High Credit Score (${currentAnalysis.creditScore}) places you in the *${currentAnalysis.riskCategory} Risk* classification.
 - Low DTI ratio (${(currentAnalysis.dti * 100).toFixed(1)}%) indicates excellent utilization margins.
-- Net liquid buffer remaining is positive ($${currentAnalysis.netRemainingCash.toFixed(2)}).
+- Net liquid buffer remaining is positive (₹${currentAnalysis.netRemainingCash.toFixed(2)}).
 
 **Recommendations:**
-- Your requested amount of **$${currentAnalysis.amount.toLocaleString()}** is well within standard risk rules.
+- Your requested amount of **₹${currentAnalysis.amount.toLocaleString()}** is well within standard risk rules.
 - Settle outstanding loan balances to further improve DTI and qualify for lowest prime interest rates.`;
     } else if (currentAnalysis.status === 'Manual Review Required') {
       adviceText = `**Critical Vectors:**
@@ -677,7 +677,7 @@ It represents the percentage of your gross monthly income used to pay off housin
 - **Over 45%:** Over-leveraged, which is our standard decline threshold.`;
   }
   
-  return `Based on your profile (Income: $${currentAnalysis.income}/mo, Credit Score: ${currentAnalysis.creditScore}, Status: ${currentAnalysis.status}), I recommend reducing outstanding liabilities to lower your DTI and optimize your cash buffers. Let me know if you have specific questions about EMIs, bank policies, or budgeting.`;
+  return `Based on your profile (Income: ₹${currentAnalysis.income}/mo, Credit Score: ${currentAnalysis.creditScore}, Status: ${currentAnalysis.status}), I recommend reducing outstanding liabilities to lower your DTI and optimize your cash buffers. Let me know if you have specific questions about EMIs, bank policies, or budgeting.`;
 }
 
 // ----------------------------------------------------
