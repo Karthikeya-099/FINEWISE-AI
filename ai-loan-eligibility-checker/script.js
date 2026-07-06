@@ -692,15 +692,10 @@ async function triggerGoogleSheetSync() {
   
   const payload = {
     name: currentAnalysis.name,
-    email: currentAnalysis.email,
-    monthlyIncome: currentAnalysis.income,
-    monthlyExpenses: currentAnalysis.expenses,
-    creditScore: currentAnalysis.creditScore,
-    requestedAmount: currentAnalysis.amount,
-    tenure: currentAnalysis.tenure,
-    emi: parseFloat(currentAnalysis.proposedEmi.toFixed(2)),
-    eligibilityStatus: currentAnalysis.status,
-    riskCategory: currentAnalysis.riskCategory
+    salary: currentAnalysis.salary,
+    score: currentAnalysis.creditScore,
+    emi: currentAnalysis.emiInput,
+    result: currentAnalysis.status
   };
   
   // Local Backup: File Download
@@ -730,8 +725,8 @@ async function triggerGoogleSheetSync() {
 }
 
 function downloadLocalBackup(data) {
-  let csv = 'Timestamp,Name,Email,Monthly Income,Monthly Expenses,Credit Score,Requested Loan,Tenure,Monthly EMI,Eligibility Status,Risk Category\n';
-  csv += `"${new Date().toLocaleString()}","${data.name}","${data.email}",${data.monthlyIncome},${data.monthlyExpenses},${data.creditScore},${data.requestedAmount},${data.tenure},${data.emi},"${data.eligibilityStatus}","${data.riskCategory}"`;
+  let csv = 'Name,Salary,Credit Score,EMI,Result\n';
+  csv += `"${data.name}",${data.salary},${data.score},${data.emi !== undefined && !isNaN(data.emi) ? data.emi : ""},"${data.result}"`;
   
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
