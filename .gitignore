@@ -19,3 +19,14 @@ logs/
 # OS metadata
 .DS_Store
 Thumbs.db
+
+# Python cache and bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+venv/
+ENV/
+
