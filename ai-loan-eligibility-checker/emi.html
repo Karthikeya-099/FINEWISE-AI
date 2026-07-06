@@ -87,9 +87,9 @@
 
           <form id="emi-form" onsubmit="handleEmiSubmit(event)">
             <div class="form-group">
-              <label class="form-label" for="calc-amount">Loan Principal Amount ($)</label>
+              <label class="form-label" for="calc-amount">Loan Principal Amount (₹)</label>
               <div class="input-wrapper">
-                <i class="fa-solid fa-dollar-sign input-icon"></i>
+                <i class="fa-solid fa-indian-rupee-sign input-icon"></i>
                 <input type="number" id="calc-amount" class="form-control" min="1" placeholder="e.g. 20000" required>
               </div>
             </div>
@@ -129,7 +129,7 @@
           <div id="emi-active-section" style="display: none;">
             <div class="stat-card" style="margin-bottom: 1.5rem; background: rgba(59, 130, 246, 0.04); border-color: rgba(59, 130, 246, 0.15);">
               <div class="stat-title">Monthly Installment (EMI)</div>
-              <div class="stat-value text-accent" id="emi-output-val" style="font-size: 2.25rem;">$0.00</div>
+              <div class="stat-value text-accent" id="emi-output-val" style="font-size: 2.25rem;">₹0.00</div>
               <div class="stat-meta">Formula: Reducing Balance</div>
             </div>
 

@@ -120,12 +120,26 @@ function handleEmiSubmit(event) {
   const rate = parseFloat(document.getElementById('calc-interest').value);
   const tenure = parseInt(document.getElementById('calc-tenure').value);
   
+  // Validation checks
+  if (isNaN(principal) || principal <= 0) {
+    showGlobalAlert('danger', 'Principal loan amount must be greater than 0.');
+    return;
+  }
+  if (isNaN(rate) || rate <= 0) {
+    showGlobalAlert('danger', 'Interest rate must be greater than 0%.');
+    return;
+  }
+  if (isNaN(tenure) || tenure <= 0) {
+    showGlobalAlert('danger', 'Loan tenure duration must be at least 1 month.');
+    return;
+  }
+  
   const emi = defCalculateEmi(principal, rate, tenure);
   
   // Show results section
   document.getElementById('emi-placeholder').style.display = 'none';
   document.getElementById('emi-active-section').style.display = 'block';
-  document.getElementById('emi-output-val').textContent = `$${emi.toFixed(2)}`;
+  document.getElementById('emi-output-val').textContent = `₹${emi.toFixed(2)}`;
   
   // Build schedule
   const tableBody = document.querySelector('#emi-schedule-table tbody');
@@ -142,15 +156,15 @@ function handleEmiSubmit(event) {
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>${i}</td>
-      <td>$${emi.toFixed(2)}</td>
-      <td>$${interest.toFixed(2)}</td>
-      <td>$${pPaid.toFixed(2)}</td>
-      <td>$${Math.max(0, balance).toFixed(2)}</td>
+      <td>₹${emi.toFixed(2)}</td>
+      <td>₹${interest.toFixed(2)}</td>
+      <td>₹${pPaid.toFixed(2)}</td>
+      <td>₹${Math.max(0, balance).toFixed(2)}</td>
     `;
     tableBody.appendChild(row);
   }
   
-  showGlobalAlert('success', `EMI calculation complete. Monthly payment: <strong>$${emi.toFixed(2)}</strong>`);
+  showGlobalAlert('success', `EMI calculation complete. Monthly payment: <strong>₹${emi.toFixed(2)}</strong>`);
 }
 
 // ----------------------------------------------------
