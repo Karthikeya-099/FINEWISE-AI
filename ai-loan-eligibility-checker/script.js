@@ -162,21 +162,16 @@ function initEligibilityPage() {
   const electedScore = localStorage.getItem('elected_credit_score');
   
   if (currentAnalysis) {
-    document.getElementById('el-name').value = currentAnalysis.name || '';
-    document.getElementById('el-email').value = currentAnalysis.email || '';
-    document.getElementById('el-income').value = currentAnalysis.income || '';
-    document.getElementById('el-expenses').value = currentAnalysis.expenses || '';
-    document.getElementById('el-score').value = electedScore ? electedScore : (currentAnalysis.creditScore || '');
-    document.getElementById('el-emi').value = currentAnalysis.existingEmi || '';
-    document.getElementById('el-amount').value = currentAnalysis.amount || '';
-    document.getElementById('el-tenure').value = currentAnalysis.tenure || '';
-    document.getElementById('el-interest').value = currentAnalysis.rate || '';
-    document.getElementById('el-employment').value = currentAnalysis.employment || 'salaried';
+    if (document.getElementById('name')) document.getElementById('name').value = currentAnalysis.name || '';
+    if (document.getElementById('salary')) document.getElementById('salary').value = currentAnalysis.salary || '';
+    if (document.getElementById('score')) document.getElementById('score').value = electedScore ? electedScore : (currentAnalysis.creditScore || '');
+    if (document.getElementById('emiInput')) document.getElementById('emiInput').value = currentAnalysis.emiInput || '';
+    if (document.getElementById('age')) document.getElementById('age').value = currentAnalysis.age || '';
     
     // Automatically trigger calculation display
     evaluateEligibilityMetrics(false);
   } else if (electedScore) {
-    document.getElementById('el-score').value = electedScore;
+    if (document.getElementById('score')) document.getElementById('score').value = electedScore;
     showGlobalAlert('success', `Imported estimated credit score: <strong>${electedScore}</strong>.`);
   }
 }
@@ -187,99 +182,99 @@ function handleEligibilitySubmit(event) {
 }
 
 function evaluateEligibilityMetrics(triggerAlerts) {
-  const name = document.getElementById('el-name').value.trim();
-  const email = document.getElementById('el-email').value.trim();
-  const income = parseFloat(document.getElementById('el-income').value);
-  const expenses = parseFloat(document.getElementById('el-expenses').value);
-  const creditScore = parseInt(document.getElementById('el-score').value);
-  const existingEmi = parseFloat(document.getElementById('el-emi').value);
-  const amount = parseFloat(document.getElementById('el-amount').value);
-  const tenure = parseInt(document.getElementById('el-tenure').value);
-  const rate = parseFloat(document.getElementById('el-interest').value);
-  const employment = document.getElementById('el-employment').value;
+  const name = document.getElementById('name').value.trim();
+  const salary = parseFloat(document.getElementById('salary').value);
+  const score = parseInt(document.getElementById('score').value);
+  const emiInput = parseFloat(document.getElementById('emiInput').value);
+  const age = parseInt(document.getElementById('age').value);
   
-  // Proposed Monthly EMI
-  const proposedEmi = defCalculateEmi(amount, rate, tenure);
+  // Predefined business rules
+  const rSalaryPass = salary > 30000;
+  const rScorePass = score > 700;
+  const rEmiPass = emiInput < 20000;
+  const rAgePass = age >= 21;
   
-  // DTI = (Expenses + Existing EMIs + Proposed EMI) / Income
-  const dti = income > 0 ? ((expenses + existingEmi + proposedEmi) / income) : 1.0;
+  const allRulesPass = rSalaryPass && rScorePass && rEmiPass && rAgePass;
+  
+  const status = allRulesPass ? 'Approved' : 'Rejected';
+  const badgeClass = allRulesPass ? 'badge-success' : 'badge-danger';
+  
+  const eligibleAmount = allRulesPass ? (salary * 20) : 0;
   
   // Risk Category
   let riskCategory = 'Very High';
   let riskBadgeClass = 'badge-danger';
-  if (creditScore >= 800) { riskCategory = 'Very Low'; riskBadgeClass = 'badge-success'; }
-  else if (creditScore >= 740) { riskCategory = 'Low'; riskBadgeClass = 'badge-success'; }
-  else if (creditScore >= 670) { riskCategory = 'Moderate'; riskBadgeClass = 'badge-warning'; }
-  else if (creditScore >= 580) { riskCategory = 'High'; riskBadgeClass = 'badge-warning'; }
+  if (score >= 800) { riskCategory = 'Very Low'; riskBadgeClass = 'badge-success'; }
+  else if (score >= 740) { riskCategory = 'Low'; riskBadgeClass = 'badge-success'; }
+  else if (score >= 670) { riskCategory = 'Moderate'; riskBadgeClass = 'badge-warning'; }
+  else if (score >= 580) { riskCategory = 'High'; riskBadgeClass = 'badge-warning'; }
   
-  // Eligibility decision rules
-  let status = 'Approved';
-  let badgeClass = 'badge-success';
-  let reason = 'All primary credit risk metrics pass standard buffers.';
+  // Build details list for reasons
+  let failedRules = [];
+  if (!rSalaryPass) failedRules.push('Monthly salary must exceed ₹30,000.');
+  if (!rScorePass) failedRules.push('Credit score must be greater than 700.');
+  if (!rEmiPass) failedRules.push('Existing EMI obligations must remain below ₹20,000.');
+  if (!rAgePass) failedRules.push('Applicant age must be at least 21 years.');
   
-  const netRemainingCash = income - (expenses + existingEmi + proposedEmi);
-  
-  if (employment === 'unemployed') {
-    status = 'Declined';
-    badgeClass = 'badge-danger';
-    reason = 'Employment stability is a mandatory checklist constraint.';
-  } else if (creditScore < 580) {
-    status = 'Declined';
-    badgeClass = 'badge-danger';
-    reason = 'Credit score is below the minimum threshold of 580.';
-  } else if (netRemainingCash <= 0) {
-    status = 'Declined';
-    badgeClass = 'badge-danger';
-    reason = 'Proposed installment payment exceeds remaining net cash flow.';
-  } else if (dti > 0.45) {
-    status = 'Declined';
-    badgeClass = 'badge-danger';
-    reason = `DTI ratio (${(dti * 100).toFixed(1)}%) exceeds the risk ceiling of 45%.`;
-  } else if (dti > 0.38 || creditScore < 640) {
-    status = 'Manual Review Required';
-    badgeClass = 'badge-warning';
-    reason = 'Elevated DTI or sub-prime credit rating requires secondary evaluation.';
-  }
+  const reason = allRulesPass ? 'All primary credit risk metrics pass standard buffers.' : failedRules.join(' ');
   
   // Save State
   currentAnalysis = {
-    name, email, income, expenses, creditScore, existingEmi,
-    amount, tenure, rate, proposedEmi, dti, riskCategory,
-    status, reason, netRemainingCash, employment
+    name,
+    salary,
+    creditScore: score,
+    emiInput,
+    age,
+    amount: eligibleAmount,
+    income: salary,      // mapped for legacy chat context compatibility
+    expenses: emiInput,  // mapped for legacy chat context compatibility
+    existingEmi: emiInput,
+    proposedEmi: 0,
+    dti: salary > 0 ? (emiInput / salary) : 1.0,
+    riskCategory,
+    status,
+    reason,
+    netRemainingCash: salary - emiInput
   };
   localStorage.setItem('finewise_analysis', JSON.stringify(currentAnalysis));
   
   // Render Dashboard
-  document.getElementById('dash-emi-value').textContent = `$${proposedEmi.toFixed(2)}`;
+  document.getElementById('dash-eligible-amount').textContent = `₹${eligibleAmount.toLocaleString('en-IN')}`;
   
   const statusBadge = document.getElementById('dash-eligibility-badge');
   statusBadge.className = `stat-value badge ${badgeClass}`;
   statusBadge.textContent = status;
-  document.getElementById('dash-eligibility-reason').textContent = reason;
-  
-  document.getElementById('dash-dti-value').textContent = `${(dti * 100).toFixed(1)}%`;
-  const dtiStatus = document.getElementById('dash-dti-status');
-  if (dti <= 0.35) dtiStatus.innerHTML = '<span style="color: var(--color-success);">Excellent Capacity</span>';
-  else if (dti <= 0.45) dtiStatus.innerHTML = '<span style="color: var(--color-warning);">Nearing Ceiling</span>';
-  else dtiStatus.innerHTML = '<span style="color: var(--color-danger);">Over-Leveraged</span>';
   
   const riskBadge = document.getElementById('dash-risk-badge');
   riskBadge.className = `stat-value badge ${riskBadgeClass}`;
   riskBadge.textContent = riskCategory;
-  document.getElementById('dash-risk-score').textContent = `Rating Index: ${creditScore}`;
   
-  document.getElementById('dash-net-income').textContent = `$${income.toFixed(2)}`;
-  document.getElementById('dash-total-commit').textContent = `$${(expenses + existingEmi + proposedEmi).toFixed(2)}`;
-  
-  const bufferEl = document.getElementById('dash-cash-buffer');
-  bufferEl.textContent = `$${netRemainingCash.toFixed(2)}`;
-  bufferEl.className = netRemainingCash >= 0 ? 'text-success' : 'text-danger';
+  // Populate checklist HTML
+  const checklistEl = document.getElementById('rule-checklist-list');
+  checklistEl.innerHTML = `
+    <li class="util-row">
+      <span>Monthly Salary &gt; ₹30,000</span>
+      <strong class="${rSalaryPass ? 'text-success' : 'text-danger'}">${rSalaryPass ? '✅ Passed' : '❌ Failed'}</strong>
+    </li>
+    <li class="util-row">
+      <span>Credit Score &gt; 700</span>
+      <strong class="${rScorePass ? 'text-success' : 'text-danger'}">${rScorePass ? '✅ Passed' : '❌ Failed'}</strong>
+    </li>
+    <li class="util-row">
+      <span>Existing EMI &lt; ₹20,000</span>
+      <strong class="${rEmiPass ? 'text-success' : 'text-danger'}">${rEmiPass ? '✅ Passed' : '❌ Failed'}</strong>
+    </li>
+    <li class="util-row">
+      <span>Applicant Age &ge; 21 Years</span>
+      <strong class="${rAgePass ? 'text-success' : 'text-danger'}">${rAgePass ? '✅ Passed' : '❌ Failed'}</strong>
+    </li>
+  `;
   
   document.getElementById('dashboard-placeholder').style.display = 'none';
   document.getElementById('dashboard-active').style.display = 'block';
   
   if (triggerAlerts) {
-    showGlobalAlert('success', `Credit assessment updated. Decision status: <strong>${status}</strong>.`);
+    showGlobalAlert(allRulesPass ? 'success' : 'danger', `Credit assessment updated. Decision status: <strong>${status}</strong>.`);
   }
 }
 

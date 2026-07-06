@@ -74,115 +74,68 @@
       <div id="global-alert-container"></div>
 
       <header style="margin-bottom: 2rem;">
-        <h2 style="font-size: 1.75rem; font-weight: 700; font-family: var(--font-display);">Eligibility Diagnostic Center</h2>
-        <p style="color: var(--text-secondary); font-size: 0.9375rem;">Input your budget constraints, income, and requested amount to verify qualification parameters.</p>
+        <h2 style="font-size: 1.75rem; font-weight: 700; font-family: var(--font-display);">Loan Eligibility Checker</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9375rem;">Verify your CIBIL rating, monthly constraints, and dynamic loan ceilings based on rules algorithms.</p>
       </header>
 
       <div class="dashboard-grid">
         
         <!-- Eligibility Checker Form Card -->
         <div class="glass-card">
-          <h3 class="panel-title">Client Profile Assessment</h3>
-          <p class="panel-subtitle">Calculates proposed DTI, net buffer, and rules eligibility.</p>
+          <h3 class="panel-title">Eligibility Criteria Form</h3>
+          <p class="panel-subtitle">Evaluates profile details using predefined BFSI business rules.</p>
 
           <form id="eligibility-form" onsubmit="handleEligibilitySubmit(event)">
             <div class="form-group">
-              <label class="form-label" for="el-name">Full Name</label>
+              <label class="form-label" for="name">Applicant Name</label>
               <div class="input-wrapper">
                 <i class="fa-solid fa-user input-icon"></i>
-                <input type="text" id="el-name" class="form-control" placeholder="e.g. John Doe" required>
+                <input type="text" id="name" class="form-control" placeholder="e.g. Karthikeya" required>
               </div>
             </div>
 
             <div class="form-group">
-              <label class="form-label" for="el-email">Email Address</label>
+              <label class="form-label" for="salary">Monthly Salary (INR ₹)</label>
               <div class="input-wrapper">
-                <i class="fa-solid fa-envelope input-icon"></i>
-                <input type="email" id="el-email" class="form-control" placeholder="e.g. john@example.com" required>
+                <i class="fa-solid fa-indian-rupee-sign input-icon"></i>
+                <input type="number" id="salary" class="form-control" min="0" placeholder="Monthly salary in ₹ (must exceed ₹30,000)" required>
               </div>
             </div>
 
             <div class="form-grid-2">
               <div class="form-group">
-                <label class="form-label" for="el-income">Gross Monthly Income ($)</label>
-                <div class="input-wrapper">
-                  <i class="fa-solid fa-wallet input-icon"></i>
-                  <input type="number" id="el-income" class="form-control" min="0" placeholder="e.g. 5000" required>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="el-expenses">Basic Monthly Expenses ($)</label>
-                <div class="input-wrapper">
-                  <i class="fa-solid fa-house input-icon"></i>
-                  <input type="number" id="el-expenses" class="form-control" min="0" placeholder="e.g. 1500" required>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-grid-2">
-              <div class="form-group">
-                <label class="form-label" for="el-score">Credit Score (300-850)</label>
+                <label class="form-label" for="score">CIBIL / Credit Score (300-900)</label>
                 <div class="input-wrapper">
                   <i class="fa-solid fa-star-half-stroke input-icon"></i>
-                  <input type="number" id="el-score" class="form-control" min="300" max="850" placeholder="e.g. 720" required>
+                  <input type="number" id="score" class="form-control" min="300" max="900" placeholder="Score (must be > 700)" required>
                 </div>
               </div>
               <div class="form-group">
-                <label class="form-label" for="el-emi">Active Monthly Debt EMIs ($)</label>
+                <label class="form-label" for="emiInput">Existing Monthly EMI (INR ₹)</label>
                 <div class="input-wrapper">
                   <i class="fa-solid fa-credit-card input-icon"></i>
-                  <input type="number" id="el-emi" class="form-control" min="0" placeholder="e.g. 400" required>
+                  <input type="number" id="emiInput" class="form-control" min="0" placeholder="Existing EMI (must remain < ₹20,000)" required>
                 </div>
               </div>
             </div>
 
-            <div class="form-grid-2">
-              <div class="form-group">
-                <label class="form-label" for="el-amount">Requested Loan Amount ($)</label>
-                <div class="input-wrapper">
-                  <i class="fa-solid fa-money-bill-wave input-icon"></i>
-                  <input type="number" id="el-amount" class="form-control" min="0" placeholder="e.g. 30000" required>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="el-tenure">Tenure (Months)</label>
-                <div class="input-wrapper">
-                  <i class="fa-solid fa-calendar-days input-icon"></i>
-                  <input type="number" id="el-tenure" class="form-control" min="1" placeholder="e.g. 60" required>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-grid-2">
-              <div class="form-group">
-                <label class="form-label" for="el-interest">Expected Interest Rate (%)</label>
-                <div class="input-wrapper">
-                  <i class="fa-solid fa-percent input-icon"></i>
-                  <input type="number" id="el-interest" class="form-control" step="0.01" min="1" max="100" placeholder="e.g. 7.5" required>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="el-employment">Employment Status</label>
-                <div class="input-wrapper">
-                  <i class="fa-solid fa-briefcase input-icon"></i>
-                  <select id="el-employment" class="form-control" required>
-                    <option value="salaried">Salaried Employee</option>
-                    <option value="self-employed">Self-Employed / Business</option>
-                    <option value="unemployed">Unemployed / Other</option>
-                  </select>
-                </div>
+            <div class="form-group">
+              <label class="form-label" for="age">Applicant Age (Years)</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-calendar-day input-icon"></i>
+                <input type="number" id="age" class="form-control" min="0" placeholder="Applicant age in years (must be at least 21 years)" required>
               </div>
             </div>
 
             <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
-              <i class="fa-solid fa-magnifying-glass-chart"></i> Run Diagnostic
+              <i class="fa-solid fa-magnifying-glass-chart"></i> Analyze Loan Eligibility
             </button>
           </form>
         </div>
 
         <!-- Result Dashboard Card -->
         <div class="glass-card" id="dashboard-card">
-          <h3 class="panel-title" style="margin-bottom: 1.25rem;">Diagnostic Ledger</h3>
+          <h3 class="panel-title" style="margin-bottom: 1.25rem;">Diagnostics Ledger</h3>
           
           <div id="dashboard-placeholder" class="placeholder-state">
             <i class="fa-solid fa-gauge-high placeholder-icon"></i>
@@ -190,44 +143,36 @@
           </div>
 
           <div id="dashboard-active" style="display: none;">
-            <div class="stats-grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
-              <div class="stat-card">
-                <div class="stat-title">Calculated Proposed EMI</div>
-                <div class="stat-value text-accent" id="dash-emi-value">$0.00</div>
-                <div class="stat-meta">Amortized monthly payment</div>
+            <div class="stats-grid" style="grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+              
+              <!-- Eligible Loan Amount Card -->
+              <div class="stat-card" style="background: rgba(59, 130, 246, 0.04); border-color: rgba(59, 130, 246, 0.15);">
+                <div class="stat-title">Eligible Loan Amount</div>
+                <div class="stat-value text-accent" id="dash-eligible-amount" style="font-size: 2.25rem;">₹0</div>
+                <div class="stat-meta" id="dash-eligible-formula">Formula: Monthly Salary &times; 20</div>
               </div>
-              <div class="stat-card">
-                <div class="stat-title">Decision Output</div>
-                <div class="stat-value badge" id="dash-eligibility-badge">-</div>
-                <div class="stat-meta" id="dash-eligibility-reason">-</div>
+              
+              <!-- Side-by-side secondary badges -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="stat-card">
+                  <div class="stat-title">Approval Decision</div>
+                  <div class="stat-value badge" id="dash-eligibility-badge" style="font-size: 1rem;">-</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-title">CIBIL Risk Tier</div>
+                  <div class="stat-value badge" id="dash-risk-badge" style="font-size: 1rem;">-</div>
+                </div>
               </div>
-              <div class="stat-card">
-                <div class="stat-title">Debt-to-Income (DTI)</div>
-                <div class="stat-value" id="dash-dti-value">0%</div>
-                <div class="stat-meta" id="dash-dti-status">-</div>
-              </div>
-              <div class="stat-card">
-                <div class="stat-title">Risk Matrix Level</div>
-                <div class="stat-value badge" id="dash-risk-badge">-</div>
-                <div class="stat-meta" id="dash-risk-score">-</div>
-              </div>
+
             </div>
 
-            <!-- Detailed Breakdown -->
-            <div style="margin-top: 1.5rem; background: rgba(10, 14, 26, 0.4); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--glass-border);">
-              <h4 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem; text-transform: uppercase; color: var(--text-secondary);">Income Allocation Summary</h4>
-              <div class="util-row">
-                <span>Client Monthly Income:</span>
-                <strong id="dash-net-income" class="text-success">$0.00</strong>
-              </div>
-              <div class="util-row">
-                <span>Expenses + Existing EMIs + Proposed:</span>
-                <strong id="dash-total-commit" class="text-danger">$0.00</strong>
-              </div>
-              <div class="util-row" style="border-top: 1px solid var(--glass-border); padding-top: 0.5rem; margin-top: 0.5rem;">
-                <span>Estimated Net Cash Remaining:</span>
-                <strong id="dash-cash-buffer">$0.00</strong>
-              </div>
+            <!-- Rules Validation Ledger -->
+            <div style="background: rgba(10, 14, 26, 0.4); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+              <h4 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem; text-transform: uppercase; color: var(--text-secondary);">Business Rule Checklists</h4>
+              
+              <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.875rem;" id="rule-checklist-list">
+                <!-- Filled dynamically by script.js -->
+              </ul>
             </div>
             
             <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem;">
