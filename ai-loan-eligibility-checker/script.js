@@ -113,7 +113,7 @@ const defCalculateEmi = (principal, annualRate, tenureMonths) => {
 };
 
 // Handle Amortization calculator form
-function handleEmiSubmit(event) {
+function calculateEMI(event) {
   event.preventDefault();
   
   const principal = parseFloat(document.getElementById('calc-amount').value);
@@ -183,29 +183,26 @@ function initEligibilityPage() {
     if (document.getElementById('age')) document.getElementById('age').value = currentAnalysis.age || '';
     
     // Automatically trigger calculation display
-    evaluateEligibilityMetrics(false);
+    checkEligibility(false);
   } else if (electedScore) {
     if (document.getElementById('score')) document.getElementById('score').value = electedScore;
     showGlobalAlert('success', `Imported estimated credit score: <strong>${electedScore}</strong>.`);
   }
 }
 
-function handleEligibilitySubmit(event) {
-  event.preventDefault();
-  evaluateEligibilityMetrics(true);
-}
-
-function evaluateEligibilityMetrics(triggerAlerts) {
+function checkEligibility(event) {
+  if (event && event.preventDefault) event.preventDefault();
+  
   const name = document.getElementById('name').value.trim();
   const salary = parseFloat(document.getElementById('salary').value);
   const score = parseInt(document.getElementById('score').value);
-  const emiInput = parseFloat(document.getElementById('emiInput').value);
+  const emi = parseFloat(document.getElementById('emiInput').value);
   const age = parseInt(document.getElementById('age').value);
   
   // Predefined business rules
   const rSalaryPass = salary > 30000;
   const rScorePass = score > 700;
-  const rEmiPass = emiInput < 20000;
+  const rEmiPass = emi < 20000;
   const rAgePass = age >= 21;
   
   const allRulesPass = rSalaryPass && rScorePass && rEmiPass && rAgePass;
@@ -225,30 +222,30 @@ function evaluateEligibilityMetrics(triggerAlerts) {
   
   // Build details list for reasons
   let failedRules = [];
-  if (!rSalaryPass) failedRules.push('Monthly salary must exceed ₹30,000.');
-  if (!rScorePass) failedRules.push('Credit score must be greater than 700.');
-  if (!rEmiPass) failedRules.push('Existing EMI obligations must remain below ₹20,000.');
-  if (!rAgePass) failedRules.push('Applicant age must be at least 21 years.');
+  if (!rSalaryPass) failedRules.push('Rejected — insufficient income');
+  if (!rScorePass) failedRules.push('Rejected — low creditworthiness');
+  if (!rEmiPass) failedRules.push('Rejected — high existing obligations');
+  if (!rAgePass) failedRules.push('Rejected — minimum age requirement');
   
-  const reason = allRulesPass ? 'All primary credit risk metrics pass standard buffers.' : failedRules.join(' ');
+  const reason = allRulesPass ? 'All primary credit risk metrics pass standard buffers.' : failedRules.join(', ');
   
   // Save State
   currentAnalysis = {
     name,
     salary,
     creditScore: score,
-    emiInput,
+    emiInput: emi,
     age,
     amount: eligibleAmount,
     income: salary,      // mapped for legacy chat context compatibility
-    expenses: emiInput,  // mapped for legacy chat context compatibility
-    existingEmi: emiInput,
+    expenses: emi,       // mapped for legacy chat context compatibility
+    existingEmi: emi,
     proposedEmi: 0,
-    dti: salary > 0 ? (emiInput / salary) : 1.0,
+    dti: salary > 0 ? (emi / salary) : 1.0,
     riskCategory,
     status,
     reason,
-    netRemainingCash: salary - emiInput
+    netRemainingCash: salary - emi
   };
   localStorage.setItem('finewise_analysis', JSON.stringify(currentAnalysis));
   
@@ -268,28 +265,49 @@ function evaluateEligibilityMetrics(triggerAlerts) {
   checklistEl.innerHTML = `
     <li class="util-row">
       <span>Monthly Salary &gt; ₹30,000</span>
-      <strong class="${rSalaryPass ? 'text-success' : 'text-danger'}">${rSalaryPass ? '✅ Passed' : '❌ Failed'}</strong>
+      <strong class="${rSalaryPass ? 'text-success' : 'text-danger'}">${rSalaryPass ? '✅ Passed' : '❌ Rejected — insufficient income'}</strong>
     </li>
     <li class="util-row">
       <span>Credit Score &gt; 700</span>
-      <strong class="${rScorePass ? 'text-success' : 'text-danger'}">${rScorePass ? '✅ Passed' : '❌ Failed'}</strong>
+      <strong class="${rScorePass ? 'text-success' : 'text-danger'}">${rScorePass ? '✅ Passed' : '❌ Rejected — low creditworthiness'}</strong>
     </li>
     <li class="util-row">
       <span>Existing EMI &lt; ₹20,000</span>
-      <strong class="${rEmiPass ? 'text-success' : 'text-danger'}">${rEmiPass ? '✅ Passed' : '❌ Failed'}</strong>
+      <strong class="${rEmiPass ? 'text-success' : 'text-danger'}">${rEmiPass ? '✅ Passed' : '❌ Rejected — high existing obligations'}</strong>
     </li>
     <li class="util-row">
       <span>Applicant Age &ge; 21 Years</span>
-      <strong class="${rAgePass ? 'text-success' : 'text-danger'}">${rAgePass ? '✅ Passed' : '❌ Failed'}</strong>
+      <strong class="${rAgePass ? 'text-success' : 'text-danger'}">${rAgePass ? '✅ Passed' : '❌ Rejected — minimum age requirement'}</strong>
     </li>
   `;
   
   document.getElementById('dashboard-placeholder').style.display = 'none';
   document.getElementById('dashboard-active').style.display = 'block';
   
+  const triggerAlerts = event !== false;
   if (triggerAlerts) {
     showGlobalAlert(allRulesPass ? 'success' : 'danger', `Credit assessment updated. Decision status: <strong>${status}</strong>.`);
   }
+
+  // Google Sheets Storage (matching screenshot)
+  const resultText = status;
+  fetch(appSettings.sheetUrl || "https://script.google.com/macros/s/AKfycbzznLZMbfU0517KPPXpafXGn0T2-DuknDCe-G29UGd00A/exec", {
+    method: "POST",
+    body: JSON.stringify({
+      name: name,
+      salary: salary,
+      score: score,
+      emi: emi,
+      result: resultText
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log("Data Saved");
+  })
+  .catch(err => {
+    console.warn("Storage webhook fetch bypassed or blocked by CORS (expected standard browser behavior in local execution). Data cached locally.");
+  });
 }
 
 // ----------------------------------------------------
@@ -300,7 +318,7 @@ function initCreditPage() {
   // If we have profile data, we can prepopulate utilization etc. if desired
 }
 
-function handleCreditSubmit(event) {
+function analyzeCredit(event) {
   event.preventDefault();
   
   const defaultFlag = document.getElementById('cr-history').value;
