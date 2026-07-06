@@ -209,8 +209,8 @@ function checkEligibility(event) {
   const age = parseInt(document.getElementById('age').value);
   
   // Predefined business rules
-  const rSalaryPass = salary > 30000;
-  const rScorePass = score > 700;
+  const rSalaryPass = salary >= 20000;
+  const rScorePass = score >= 600;
   const rEmiPass = emi < 20000;
   const rAgePass = age >= 21;
   
@@ -279,11 +279,11 @@ function checkEligibility(event) {
   const checklistEl = document.getElementById('rule-checklist-list');
   checklistEl.innerHTML = `
     <li class="util-row">
-      <span>Monthly Salary &gt; ₹30,000</span>
+      <span>Monthly Salary &ge; ₹20,000</span>
       <strong class="${rSalaryPass ? 'text-success' : 'text-danger'}">${rSalaryPass ? '✅ Passed' : '❌ Rejected — insufficient income'}</strong>
     </li>
     <li class="util-row">
-      <span>Credit Score &gt; 700</span>
+      <span>Credit Score &ge; 600</span>
       <strong class="${rScorePass ? 'text-success' : 'text-danger'}">${rScorePass ? '✅ Passed' : '❌ Rejected — low creditworthiness'}</strong>
     </li>
     <li class="util-row">
