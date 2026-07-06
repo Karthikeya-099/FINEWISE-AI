@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FINAI - Credit Score Analyzer</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app-layout">
+    
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+      <div class="logo" style="font-size: 1.25rem;">
+        <i class="fa-solid fa-chart-line logo-icon"></i>
+        <span>FIN<span class="accent-text">AI</span></span>
+      </div>
+      <button class="menu-toggle-btn" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </header>
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar" id="app-sidebar">
+      <div class="sidebar-logo">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>FIN<span class="accent-text">AI</span></span>
+      </div>
+      
+      <ul class="nav-menu">
+        <li>
+          <a href="index.html" class="nav-item">
+            <i class="fa-solid fa-house"></i> Home
+          </a>
+        </li>
+        <li>
+          <a href="eligibility.html" class="nav-item">
+            <i class="fa-solid fa-clipboard-check"></i> Eligibility
+          </a>
+        </li>
+        <li>
+          <a href="credit.html" class="nav-item active">
+            <i class="fa-solid fa-star-half-stroke"></i> Credit Score
+          </a>
+        </li>
+        <li>
+          <a href="emi.html" class="nav-item">
+            <i class="fa-solid fa-calculator"></i> EMI
+          </a>
+        </li>
+        <li>
+          <a href="tips.html" class="nav-item">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Tips
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-sm" onclick="openSettingsModal()" style="width: 100%;">
+          <i class="fa-solid fa-gear"></i> Settings
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-content">
+      <div id="global-alert-container"></div>
+
+      <header style="margin-bottom: 2rem;">
+        <h2 style="font-size: 1.75rem; font-weight: 700; font-family: var(--font-display);">Credit Score Analyzer</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9375rem;">Evaluate your creditworthiness risk factors or calculate an estimated credit score rating.</p>
+      </header>
+
+      <div class="dashboard-grid">
+        
+        <!-- Credit Analyzer Form Card -->
+        <div class="glass-card">
+          <h3 class="panel-title">Credit Risk Calculator</h3>
+          <p class="panel-subtitle">Computes estimated rating index based on 5 weighted credit factors.</p>
+
+          <form id="credit-form" onsubmit="handleCreditSubmit(event)">
+            <div class="form-group">
+              <label class="form-label" for="cr-history">Have you defaulted on any loans in the last 2 years?</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-circle-exclamation input-icon"></i>
+                <select id="cr-history" class="form-control" required>
+                  <option value="no">No, never defaulted</option>
+                  <option value="yes">Yes, have active/prior defaults</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="cr-utilization">Credit Card Utilization Ratio (%)</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-credit-card input-icon"></i>
+                  <input type="number" id="cr-utilization" class="form-control" min="0" max="100" placeholder="e.g. 25" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="cr-age">Credit History Age (Years)</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-calendar input-icon"></i>
+                  <input type="number" id="cr-age" class="form-control" min="0" placeholder="e.g. 5" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="cr-diversity">Number of Active Credit Types</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-tags input-icon"></i>
+                  <input type="number" id="cr-diversity" class="form-control" min="0" placeholder="e.g. 2" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="cr-inquiries">Hard Credit Inquiries (Last 6 Months)</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-magnifying-glass input-icon"></i>
+                  <input type="number" id="cr-inquiries" class="form-control" min="0" placeholder="e.g. 1" required>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+              <i class="fa-solid fa-star-half-stroke"></i> Estimate Credit Score
+            </button>
+          </form>
+        </div>
+
+        <!-- Result Dashboard Card -->
+        <div class="glass-card" id="credit-dashboard-card">
+          <h3 class="panel-title" style="margin-bottom: 1.25rem;">Credit Diagnostics</h3>
+          
+          <div id="credit-dashboard-placeholder" class="placeholder-state">
+            <i class="fa-solid fa-starplaceholder placeholder-icon" style="content: '\f005';"></i>
+            <p>Perform the credit evaluation on the left to see your estimated score and key contributing risk factors.</p>
+          </div>
+
+          <div id="credit-dashboard-active" style="display: none;">
+            <div class="stats-grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="stat-card">
+                <div class="stat-title">Estimated Credit Score</div>
+                <div class="stat-value text-accent" id="dash-credit-value">700</div>
+                <div class="stat-meta">Approximate FICO score</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-title">Risk Classification</div>
+                <div class="stat-value badge" id="dash-credit-risk-badge">-</div>
+                <div class="stat-meta" id="dash-credit-risk-sub">-</div>
+              </div>
+            </div>
+
+            <!-- Breakdown Factors -->
+            <div style="margin-top: 1.5rem; background: rgba(10, 14, 26, 0.4); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+              <h4 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem; text-transform: uppercase; color: var(--text-secondary);">Score Factors Impact</h4>
+              <div class="util-row">
+                <span>Payment History (35%):</span>
+                <strong id="impact-history" class="text-success">Excellent</strong>
+              </div>
+              <div class="util-row">
+                <span>Credit Utilization (30%):</span>
+                <strong id="impact-utilization" class="text-success">Good</strong>
+              </div>
+              <div class="util-row">
+                <span>Credit Age (15%):</span>
+                <strong id="impact-age" class="text-warning">Moderate</strong>
+              </div>
+              <div class="util-row">
+                <span>Recent Inquiries (20%):</span>
+                <strong id="impact-inquiries" class="text-success">Low Inquiry</strong>
+              </div>
+            </div>
+
+            <!-- Action Button -->
+            <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end;">
+              <a href="eligibility.html" class="btn btn-secondary" onclick="saveElectedCreditToLocal()">
+                <i class="fa-solid fa-clipboard-check"></i> Use in Eligibility Checker
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div class="modal" id="settings-modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeSettingsModal()">&times;</button>
+      
+      <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">Configuration Settings</h3>
+      <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Configure your API keys and serverless spreadsheet webhooks.</p>
+
+      <div id="settings-alert"></div>
+
+      <form id="settings-form" onsubmit="handleSettingsSave(event)">
+        <div class="form-group">
+          <label class="form-label" for="set-mode">Operation Mode</label>
+          <select id="set-mode" class="form-control" onchange="toggleApiFields(this.value)">
+            <option value="demo">Demo Mode (Offline / Mock AI & File Downloads)</option>
+            <option value="live">Live API Mode (Claude API & Google Sheets Link)</option>
+          </select>
+        </div>
+
+        <div id="api-settings-fields" style="display: none;">
+          <div class="form-group">
+            <label class="form-label" for="set-api-key">Anthropic API Key</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-key input-icon"></i>
+              <input type="password" id="set-api-key" class="form-control" placeholder="sk-ant-...">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="set-sheet-url">Google Apps Script Web App URL</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-link input-icon"></i>
+              <input type="url" id="set-sheet-url" class="form-control" placeholder="https://script.google.com/macros/s/.../exec">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Save Settings</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>

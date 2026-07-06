@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FINAI - Loan Eligibility Checker</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app-layout">
+    
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+      <div class="logo" style="font-size: 1.25rem;">
+        <i class="fa-solid fa-chart-line logo-icon"></i>
+        <span>FIN<span class="accent-text">AI</span></span>
+      </div>
+      <button class="menu-toggle-btn" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </header>
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar" id="app-sidebar">
+      <div class="sidebar-logo">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>FIN<span class="accent-text">AI</span></span>
+      </div>
+      
+      <ul class="nav-menu">
+        <li>
+          <a href="index.html" class="nav-item">
+            <i class="fa-solid fa-house"></i> Home
+          </a>
+        </li>
+        <li>
+          <a href="eligibility.html" class="nav-item active">
+            <i class="fa-solid fa-clipboard-check"></i> Eligibility
+          </a>
+        </li>
+        <li>
+          <a href="credit.html" class="nav-item">
+            <i class="fa-solid fa-star-half-stroke"></i> Credit Score
+          </a>
+        </li>
+        <li>
+          <a href="emi.html" class="nav-item">
+            <i class="fa-solid fa-calculator"></i> EMI
+          </a>
+        </li>
+        <li>
+          <a href="tips.html" class="nav-item">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Tips
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-sm" onclick="openSettingsModal()" style="width: 100%;">
+          <i class="fa-solid fa-gear"></i> Settings
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-content">
+      <div id="global-alert-container"></div>
+
+      <header style="margin-bottom: 2rem;">
+        <h2 style="font-size: 1.75rem; font-weight: 700; font-family: var(--font-display);">Eligibility Diagnostic Center</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9375rem;">Input your budget constraints, income, and requested amount to verify qualification parameters.</p>
+      </header>
+
+      <div class="dashboard-grid">
+        
+        <!-- Eligibility Checker Form Card -->
+        <div class="glass-card">
+          <h3 class="panel-title">Client Profile Assessment</h3>
+          <p class="panel-subtitle">Calculates proposed DTI, net buffer, and rules eligibility.</p>
+
+          <form id="eligibility-form" onsubmit="handleEligibilitySubmit(event)">
+            <div class="form-group">
+              <label class="form-label" for="el-name">Full Name</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-user input-icon"></i>
+                <input type="text" id="el-name" class="form-control" placeholder="e.g. John Doe" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="el-email">Email Address</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-envelope input-icon"></i>
+                <input type="email" id="el-email" class="form-control" placeholder="e.g. john@example.com" required>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="el-income">Gross Monthly Income ($)</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-wallet input-icon"></i>
+                  <input type="number" id="el-income" class="form-control" min="0" placeholder="e.g. 5000" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="el-expenses">Basic Monthly Expenses ($)</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-house input-icon"></i>
+                  <input type="number" id="el-expenses" class="form-control" min="0" placeholder="e.g. 1500" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="el-score">Credit Score (300-850)</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-star-half-stroke input-icon"></i>
+                  <input type="number" id="el-score" class="form-control" min="300" max="850" placeholder="e.g. 720" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="el-emi">Active Monthly Debt EMIs ($)</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-credit-card input-icon"></i>
+                  <input type="number" id="el-emi" class="form-control" min="0" placeholder="e.g. 400" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="el-amount">Requested Loan Amount ($)</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-money-bill-wave input-icon"></i>
+                  <input type="number" id="el-amount" class="form-control" min="0" placeholder="e.g. 30000" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="el-tenure">Tenure (Months)</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-calendar-days input-icon"></i>
+                  <input type="number" id="el-tenure" class="form-control" min="1" placeholder="e.g. 60" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="el-interest">Expected Interest Rate (%)</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-percent input-icon"></i>
+                  <input type="number" id="el-interest" class="form-control" step="0.01" min="1" max="100" placeholder="e.g. 7.5" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="el-employment">Employment Status</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-briefcase input-icon"></i>
+                  <select id="el-employment" class="form-control" required>
+                    <option value="salaried">Salaried Employee</option>
+                    <option value="self-employed">Self-Employed / Business</option>
+                    <option value="unemployed">Unemployed / Other</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+              <i class="fa-solid fa-magnifying-glass-chart"></i> Run Diagnostic
+            </button>
+          </form>
+        </div>
+
+        <!-- Result Dashboard Card -->
+        <div class="glass-card" id="dashboard-card">
+          <h3 class="panel-title" style="margin-bottom: 1.25rem;">Diagnostic Ledger</h3>
+          
+          <div id="dashboard-placeholder" class="placeholder-state">
+            <i class="fa-solid fa-gauge-high placeholder-icon"></i>
+            <p>Perform the credit evaluation on the left to reveal dynamic risk profiles and approval metrics.</p>
+          </div>
+
+          <div id="dashboard-active" style="display: none;">
+            <div class="stats-grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="stat-card">
+                <div class="stat-title">Calculated Proposed EMI</div>
+                <div class="stat-value text-accent" id="dash-emi-value">$0.00</div>
+                <div class="stat-meta">Amortized monthly payment</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-title">Decision Output</div>
+                <div class="stat-value badge" id="dash-eligibility-badge">-</div>
+                <div class="stat-meta" id="dash-eligibility-reason">-</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-title">Debt-to-Income (DTI)</div>
+                <div class="stat-value" id="dash-dti-value">0%</div>
+                <div class="stat-meta" id="dash-dti-status">-</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-title">Risk Matrix Level</div>
+                <div class="stat-value badge" id="dash-risk-badge">-</div>
+                <div class="stat-meta" id="dash-risk-score">-</div>
+              </div>
+            </div>
+
+            <!-- Detailed Breakdown -->
+            <div style="margin-top: 1.5rem; background: rgba(10, 14, 26, 0.4); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+              <h4 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem; text-transform: uppercase; color: var(--text-secondary);">Income Allocation Summary</h4>
+              <div class="util-row">
+                <span>Client Monthly Income:</span>
+                <strong id="dash-net-income" class="text-success">$0.00</strong>
+              </div>
+              <div class="util-row">
+                <span>Expenses + Existing EMIs + Proposed:</span>
+                <strong id="dash-total-commit" class="text-danger">$0.00</strong>
+              </div>
+              <div class="util-row" style="border-top: 1px solid var(--glass-border); padding-top: 0.5rem; margin-top: 0.5rem;">
+                <span>Estimated Net Cash Remaining:</span>
+                <strong id="dash-cash-buffer">$0.00</strong>
+              </div>
+            </div>
+            
+            <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem;">
+              <button class="btn btn-secondary" onclick="triggerGoogleSheetSync()">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Save to Sheets
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div class="modal" id="settings-modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeSettingsModal()">&times;</button>
+      
+      <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">Configuration Settings</h3>
+      <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Configure your API keys and serverless spreadsheet webhooks.</p>
+
+      <div id="settings-alert"></div>
+
+      <form id="settings-form" onsubmit="handleSettingsSave(event)">
+        <div class="form-group">
+          <label class="form-label" for="set-mode">Operation Mode</label>
+          <select id="set-mode" class="form-control" onchange="toggleApiFields(this.value)">
+            <option value="demo">Demo Mode (Offline / Mock AI & File Downloads)</option>
+            <option value="live">Live API Mode (Claude API & Google Sheets Link)</option>
+          </select>
+        </div>
+
+        <div id="api-settings-fields" style="display: none;">
+          <div class="form-group">
+            <label class="form-label" for="set-api-key">Anthropic API Key</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-key input-icon"></i>
+              <input type="password" id="set-api-key" class="form-control" placeholder="sk-ant-...">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="set-sheet-url">Google Apps Script Web App URL</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-link input-icon"></i>
+              <input type="url" id="set-sheet-url" class="form-control" placeholder="https://script.google.com/macros/s/.../exec">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Save Settings</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>

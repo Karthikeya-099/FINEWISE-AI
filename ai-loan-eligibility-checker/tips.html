@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FINAI - AI Financial Advisor</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app-layout">
+    
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+      <div class="logo" style="font-size: 1.25rem;">
+        <i class="fa-solid fa-chart-line logo-icon"></i>
+        <span>FIN<span class="accent-text">AI</span></span>
+      </div>
+      <button class="menu-toggle-btn" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </header>
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar" id="app-sidebar">
+      <div class="sidebar-logo">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>FIN<span class="accent-text">AI</span></span>
+      </div>
+      
+      <ul class="nav-menu">
+        <li>
+          <a href="index.html" class="nav-item">
+            <i class="fa-solid fa-house"></i> Home
+          </a>
+        </li>
+        <li>
+          <a href="eligibility.html" class="nav-item">
+            <i class="fa-solid fa-clipboard-check"></i> Eligibility
+          </a>
+        </li>
+        <li>
+          <a href="credit.html" class="nav-item">
+            <i class="fa-solid fa-star-half-stroke"></i> Credit Score
+          </a>
+        </li>
+        <li>
+          <a href="emi.html" class="nav-item">
+            <i class="fa-solid fa-calculator"></i> EMI
+          </a>
+        </li>
+        <li>
+          <a href="tips.html" class="nav-item active">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Tips
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-sm" onclick="openSettingsModal()" style="width: 100%;">
+          <i class="fa-solid fa-gear"></i> Settings
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-content">
+      <div id="global-alert-container"></div>
+
+      <header style="margin-bottom: 2rem;">
+        <h2 style="font-size: 1.75rem; font-weight: 700; font-family: var(--font-display);">AI Financial Advisor</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9375rem;">Get personalized recommendations, credit-building advice, or generate audit logs powered by Claude AI.</p>
+      </header>
+
+      <div class="dashboard-grid" style="grid-template-columns: 1.4fr 1fr;">
+        
+        <!-- Chat Area -->
+        <div class="glass-card AI-panel">
+          <div class="ai-header">
+            <div>
+              <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary);">
+                <i class="fa-solid fa-wand-magic-sparkles text-accent"></i> Claude Financial Expert
+              </h3>
+              <p style="font-size: 0.75rem; color: var(--text-secondary);">Your personal BFSI risk advisor and financial coach.</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btn-audit" onclick="generateAIAudit()" style="font-size: 0.75rem;">
+              <i class="fa-solid fa-file-invoice-dollar"></i> Generate Audit Report
+            </button>
+          </div>
+
+          <div id="ai-chat-messages" class="chat-box">
+            <div class="chat-bubble chat-ai">
+              Hello! I am your AI Financial Advisor. Based on any credit details or eligibility forms you submitted on the other pages, I will analyze your situation and recommend specific credit improvements. What can I help you with today?
+            </div>
+          </div>
+
+          <form id="ai-chat-form" onsubmit="handleChatSubmit(event)" class="chat-form-input">
+            <input type="text" id="ai-chat-input" class="form-control" placeholder="Ask a financial question..." required style="margin-bottom: 0;">
+            <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem; white-space: nowrap; margin-bottom: 0;">Send</button>
+          </form>
+        </div>
+
+        <!-- Sidebar Summary Card -->
+        <div class="glass-card" style="align-self: start;">
+          <h3 class="panel-title" style="margin-bottom: 1rem;">Assessment Context</h3>
+          
+          <div id="tips-profile-placeholder" class="placeholder-state" style="padding: 2rem 1rem;">
+            <i class="fa-solid fa-clipboard-list placeholder-icon" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+            <p style="font-size: 0.8125rem;">No active assessment context. Fill in the forms on the **Eligibility** or **Credit Score** pages to feed live data to the AI.</p>
+          </div>
+
+          <div id="tips-profile-active" style="display: none;">
+            <div class="stats-grid" style="grid-template-columns: 1fr; gap: 0.75rem; margin-bottom: 1.5rem;">
+              <div class="stat-card" style="padding: 0.75rem 1rem;">
+                <div class="stat-title" style="margin-bottom: 0.25rem;">Calculated Risk Level</div>
+                <div class="stat-value badge" id="tips-risk-badge" style="font-size: 1rem;">-</div>
+              </div>
+              <div class="stat-card" style="padding: 0.75rem 1rem;">
+                <div class="stat-title" style="margin-bottom: 0.25rem;">Eligibility Status</div>
+                <div class="stat-value badge" id="tips-eligibility-badge" style="font-size: 1rem;">-</div>
+              </div>
+            </div>
+
+            <div style="background: rgba(10, 14, 26, 0.4); padding: 1rem; border-radius: 8px; border: 1px solid var(--glass-border); font-size: 0.8125rem;">
+              <div class="util-row" style="margin-bottom: 0.375rem;">
+                <span>Monthly Income:</span>
+                <strong id="tips-net-income" class="text-success">$0.00</strong>
+              </div>
+              <div class="util-row" style="margin-bottom: 0.375rem;">
+                <span>DTI Ratio:</span>
+                <strong id="tips-dti-val">0.0%</strong>
+              </div>
+              <div class="util-row" style="margin-bottom: 0.375rem;">
+                <span>Credit Score:</span>
+                <strong id="tips-credit-val">300</strong>
+              </div>
+              <div class="util-row" style="margin-bottom: 0.375rem;">
+                <span>Requested Loan:</span>
+                <strong id="tips-amount-val">$0.00</strong>
+              </div>
+            </div>
+            
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 1rem; line-height: 1.4;">
+              *These financial data items are stored in your local browser storage and will be parsed by Claude when you click **Generate Audit Report** or submit messages.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div class="modal" id="settings-modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeSettingsModal()">&times;</button>
+      
+      <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">Configuration Settings</h3>
+      <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Configure your API keys and serverless spreadsheet webhooks.</p>
+
+      <div id="settings-alert"></div>
+
+      <form id="settings-form" onsubmit="handleSettingsSave(event)">
+        <div class="form-group">
+          <label class="form-label" for="set-mode">Operation Mode</label>
+          <select id="set-mode" class="form-control" onchange="toggleApiFields(this.value)">
+            <option value="demo">Demo Mode (Offline / Mock AI & File Downloads)</option>
+            <option value="live">Live API Mode (Claude API & Google Sheets Link)</option>
+          </select>
+        </div>
+
+        <div id="api-settings-fields" style="display: none;">
+          <div class="form-group">
+            <label class="form-label" for="set-api-key">Anthropic API Key</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-key input-icon"></i>
+              <input type="password" id="set-api-key" class="form-control" placeholder="sk-ant-...">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="set-sheet-url">Google Apps Script Web App URL</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-link input-icon"></i>
+              <input type="url" id="set-sheet-url" class="form-control" placeholder="https://script.google.com/macros/s/.../exec">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Save Settings</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>

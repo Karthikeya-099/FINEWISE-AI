@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FINAI - AI Loan Eligibility & Credit Diagnostics</title>
+  <title>FINAI - Quick EMI Calculator</title>
   
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -36,7 +36,7 @@
       
       <ul class="nav-menu">
         <li>
-          <a href="index.html" class="nav-item active">
+          <a href="index.html" class="nav-item">
             <i class="fa-solid fa-house"></i> Home
           </a>
         </li>
@@ -51,7 +51,7 @@
           </a>
         </li>
         <li>
-          <a href="emi.html" class="nav-item">
+          <a href="emi.html" class="nav-item active">
             <i class="fa-solid fa-calculator"></i> EMI
           </a>
         </li>
@@ -71,35 +71,89 @@
 
     <!-- MAIN CONTENT AREA -->
     <main class="main-content">
-      <!-- Hero Section -->
-      <section class="hero">
-        <h1 class="hero-title">AI Loan Eligibility<br>Checker</h1>
-        <p class="hero-subtitle">Smart BFSI platform powered with AI-inspired financial analysis, loan prediction, EMI calculation, and credit intelligence.</p>
-        <a href="eligibility.html" class="btn btn-primary" style="padding: 1rem 2.25rem; font-size: 1rem; border-radius: 12px;">
-          Get Started <i class="fa-solid fa-arrow-right"></i>
-        </a>
-      </section>
+      <div id="global-alert-container"></div>
 
-      <!-- Features Cards Grid -->
-      <section class="features-grid" style="margin-top: 4rem;">
-        <div class="glass-card feature-card">
-          <i class="fa-solid fa-shield-halved feature-icon"></i>
-          <h3>Multi-Factor Diagnostics</h3>
-          <p>Verifies loan eligibility using DTI, expenses, and credit rating logic concurrently.</p>
-        </div>
+      <header style="margin-bottom: 2rem;">
+        <h2 style="font-size: 1.75rem; font-weight: 700; font-family: var(--font-display);">Quick EMI Calculator</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9375rem;">Compute monthly loan installment costs and generate full amortization tables.</p>
+      </header>
+
+      <div class="dashboard-grid">
         
-        <div class="glass-card feature-card">
-          <i class="fa-solid fa-calculator feature-icon"></i>
-          <h3>EMI Amortization</h3>
-          <p>Detailed reducing-balance monthly payment calculations with dynamic schedule tables.</p>
+        <!-- EMI Form Card -->
+        <div class="glass-card">
+          <h3 class="panel-title">EMI Calculator</h3>
+          <p class="panel-subtitle">Computes monthly cost using standard reducing-balance interest formulas.</p>
+
+          <form id="emi-form" onsubmit="handleEmiSubmit(event)">
+            <div class="form-group">
+              <label class="form-label" for="calc-amount">Loan Principal Amount ($)</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-dollar-sign input-icon"></i>
+                <input type="number" id="calc-amount" class="form-control" min="1" placeholder="e.g. 20000" required>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="calc-interest">Annual Interest Rate (%)</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-percent input-icon"></i>
+                  <input type="number" id="calc-interest" class="form-control" step="0.01" min="0.1" placeholder="e.g. 8.5" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="calc-tenure">Tenure (Months)</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-clock input-icon"></i>
+                  <input type="number" id="calc-tenure" class="form-control" min="1" placeholder="e.g. 36" required>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+              <i class="fa-solid fa-calculator"></i> Calculate EMI
+            </button>
+          </form>
         </div>
 
-        <div class="glass-card feature-card">
-          <i class="fa-solid fa-wand-magic-sparkles feature-icon"></i>
-          <h3>Claude AI Financial Coaching</h3>
-          <p>Get instant credit-boosting recommendations and answers from an expert AI planner.</p>
+        <!-- Result Card -->
+        <div class="glass-card">
+          <h3 class="panel-title" style="margin-bottom: 1.25rem;">Payment Schedule</h3>
+          
+          <div id="emi-placeholder" class="placeholder-state">
+            <i class="fa-solid fa-calculator placeholder-icon"></i>
+            <p>Enter the principal, rate, and duration on the left to see the calculated EMI and schedule ledger.</p>
+          </div>
+
+          <div id="emi-active-section" style="display: none;">
+            <div class="stat-card" style="margin-bottom: 1.5rem; background: rgba(59, 130, 246, 0.04); border-color: rgba(59, 130, 246, 0.15);">
+              <div class="stat-title">Monthly Installment (EMI)</div>
+              <div class="stat-value text-accent" id="emi-output-val" style="font-size: 2.25rem;">$0.00</div>
+              <div class="stat-meta">Formula: Reducing Balance</div>
+            </div>
+
+            <h4 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem; text-transform: uppercase; color: var(--text-secondary);">Amortization Breakdown</h4>
+            <div style="max-height: 240px; overflow-y: auto; border: 1px solid var(--glass-border); border-radius: 8px;">
+              <table class="custom-table" id="emi-schedule-table">
+                <thead style="background: rgba(0,0,0,0.2); position: sticky; top: 0;">
+                  <tr>
+                    <th>Month</th>
+                    <th>Payment</th>
+                    <th>Interest</th>
+                    <th>Principal</th>
+                    <th>Balance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Filled by script.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-      </section>
+
+      </div>
     </main>
 
   </div>
@@ -130,7 +184,6 @@
               <i class="fa-solid fa-key input-icon"></i>
               <input type="password" id="set-api-key" class="form-control" placeholder="sk-ant-...">
             </div>
-            <span style="font-size: 0.75rem; color: var(--text-secondary);">Stored securely in your local browser `localStorage`.</span>
           </div>
 
           <div class="form-group">
@@ -147,7 +200,7 @@
     </div>
   </div>
 
-  <!-- Script -->
+  <!-- Scripts -->
   <script src="script.js"></script>
 </body>
 </html>
