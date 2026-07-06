@@ -296,49 +296,63 @@ function handleCreditSubmit(event) {
   const inquiries = parseInt(document.getElementById('cr-inquiries').value);
   
   // Calculate FICO Score estimate based on weights
-  // Base Score: 300. Max: 850.
+  // Base Score: 300. Max: 900.
   let score = 300;
   
-  // 1. Payment History (35% - Max 190 pts)
-  if (defaultFlag === 'no') score += 190;
+  // 1. Payment History (35% - Max 210 pts)
+  if (defaultFlag === 'no') score += 210;
   else score += 50;
   
-  // 2. Amounts Owed / Util (30% - Max 165 pts)
-  if (utilization <= 15) score += 165;
-  else if (utilization <= 30) score += 135;
-  else if (utilization <= 50) score += 90;
-  else if (utilization <= 75) score += 45;
+  // 2. Amounts Owed / Util (30% - Max 180 pts)
+  if (utilization <= 15) score += 180;
+  else if (utilization <= 30) score += 145;
+  else if (utilization <= 50) score += 100;
+  else if (utilization <= 75) score += 50;
   else score += 15;
   
-  // 3. Length of Credit History (15% - Max 85 pts)
-  if (age >= 10) score += 85;
-  else if (age >= 5) score += 65;
-  else if (age >= 3) score += 45;
+  // 3. Length of Credit History (15% - Max 90 pts)
+  if (age >= 10) score += 90;
+  else if (age >= 5) score += 70;
+  else if (age >= 3) score += 50;
   else if (age >= 1) score += 20;
   else score += 5;
   
-  // 4. Hard inquiries (10% - Max 55 pts)
-  if (inquiries === 0) score += 55;
-  else if (inquiries <= 2) score += 35;
+  // 4. Hard inquiries (10% - Max 60 pts)
+  if (inquiries === 0) score += 60;
+  else if (inquiries <= 2) score += 40;
   else if (inquiries <= 4) score += 15;
   else score += 0;
   
-  // 5. Diversity (10% - Max 55 pts)
-  if (diversity >= 3) score += 55;
-  else if (diversity >= 1) score += 35;
+  // 5. Diversity (10% - Max 60 pts)
+  if (diversity >= 3) score += 60;
+  else if (diversity >= 1) score += 40;
   else score += 10;
   
   // Bound limit
-  score = Math.min(850, Math.max(300, score));
+  score = Math.min(900, Math.max(300, score));
   
-  // Set risk class
-  let risk = 'Very High';
+  // Set risk class (Excellent: 750-900, Good: 650-749, Poor: 300-649)
+  let risk = 'Poor';
   let riskClass = 'badge-danger';
   let riskSub = 'Subprime Credit Portfolio';
-  if (score >= 800) { risk = 'Very Low'; riskClass = 'badge-success'; riskSub = 'Super-Prime Credit Tier'; }
-  else if (score >= 740) { risk = 'Low'; riskClass = 'badge-success'; riskSub = 'Prime Rating Portfolio'; }
-  else if (score >= 670) { risk = 'Moderate'; riskClass = 'badge-warning'; riskSub = 'Standard Consumer Profile'; }
-  else if (score >= 580) { risk = 'High'; riskClass = 'badge-warning'; riskSub = 'Near-Prime Credit Tier'; }
+  let advice = '';
+  
+  if (score >= 750) {
+    risk = 'Excellent';
+    riskClass = 'badge-success';
+    riskSub = 'Prime Rating Tier';
+    advice = 'Outstanding credit profile! Your financial standing is excellent. Maintain this by keeping your credit utilization low, paying statement balances in full, and limiting new credit applications.';
+  } else if (score >= 650) {
+    risk = 'Good';
+    riskClass = 'badge-warning';
+    riskSub = 'Standard Rating Tier';
+    advice = 'Good credit standing. To cross into the Excellent tier, prioritize keeping your credit card utilization below 30%, avoid multiple hard inquiries, and maintain solid timely repayments.';
+  } else {
+    risk = 'Poor';
+    riskClass = 'badge-danger';
+    riskSub = 'Subprime Rating Tier';
+    advice = 'Poor credit standing detected. We recommend focusing on immediate financial discipline to rebuild your rating: prioritize **timely repayments** of all active installments, focus on **reducing debts** to lower your leverage, and work on **improving credit utilization ratios** below 30%.';
+  }
   
   // Save estimated score to temp session storage
   localStorage.setItem('elected_credit_score', score);
@@ -349,6 +363,12 @@ function handleCreditSubmit(event) {
   rBadge.className = `stat-value badge ${riskClass}`;
   rBadge.textContent = risk;
   document.getElementById('dash-credit-risk-sub').textContent = riskSub;
+  
+  // Dynamic Advice rendering
+  const adviceEl = document.getElementById('dash-credit-recommendation');
+  if (adviceEl) {
+    adviceEl.innerHTML = advice.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  }
   
   // Impact labels
   document.getElementById('impact-history').textContent = defaultFlag === 'no' ? 'Excellent' : 'Severe Default Risk';
