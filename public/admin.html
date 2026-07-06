@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finewise AI - Admin Intelligence Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: calc(100vh - 73px);
+    }
+    
+    .admin-sidebar {
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--glass-border);
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    
+    .sidebar-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .user-profile-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+    }
+
+    .view-details-btn {
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      color: #c084fc;
+      transition: var(--transition);
+    }
+
+    .view-details-btn:hover {
+      background: var(--accent-purple);
+      color: white;
+    }
+
+    /* Modal Layout grid */
+    .modal-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .modal-section-title {
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--glass-border);
+      padding-bottom: 0.35rem;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.9375rem;
+    }
+
+    .detail-label {
+      color: var(--text-secondary);
+    }
+
+    .detail-value {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    @media (max-width: 900px) {
+      .workspace-grid {
+        grid-template-columns: 1fr;
+      }
+      .admin-sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--glass-border);
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="/" class="logo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2 17L12 22L22 17" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2 12L17 12L22 12" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="logoGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#3B82F6"/>
+            <stop offset="1" stop-color="#8B5CF6"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      Finewise AI
+    </a>
+    <div class="user-profile-badge">
+      <div class="user-avatar" id="avatar-char">A</div>
+      <div>
+        <div style="font-size: 0.875rem; font-weight: 600;" id="user-display-name">Admin</div>
+        <div style="font-size: 0.75rem; color: var(--text-secondary);">Administrator Account</div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="workspace-grid">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-menu">
+        <button class="sidebar-btn active">
+          <span>👥</span> Clients Directory
+        </button>
+      </div>
+      
+      <button class="sidebar-btn" onclick="handleLogout()" style="color: var(--color-danger); margin-top: auto;">
+        <span>🚪</span> Sign Out
+      </button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div id="global-alert"></div>
+
+      <div style="margin-bottom: 2rem;">
+        <h2 style="font-size: 1.75rem; font-weight: 700;">Client Risk Directory</h2>
+        <p style="color: var(--text-secondary);">Review client risk parameters and generated CWI analysis metrics.</p>
+      </div>
+
+      <!-- Stats row -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-title">Client Applications</div>
+          <div class="stat-value" id="stat-total-clients">0</div>
+          <div class="stat-meta">Total client files recorded</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Average Credit Score</div>
+          <div class="stat-value" id="stat-avg-credit">-</div>
+          <div class="stat-meta">Model population mean</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Total Requested Volume</div>
+          <div class="stat-value" id="stat-total-requested">$0</div>
+          <div class="stat-meta">Pending and review loans</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Average CWI Score</div>
+          <div class="stat-value" id="stat-avg-cwi">0.00</div>
+          <div class="stat-meta">Credit stability average</div>
+        </div>
+      </div>
+
+      <!-- Clients Table -->
+      <div class="glass-card">
+        <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1.25rem;">Submissions List</h3>
+        <div id="clients-table-container" class="table-container">
+          <p style="color: var(--text-secondary);">Loading clients records...</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Detail Viewer Modal (Admin Hides Bank Credentials/Account Numbers) -->
+  <div class="modal" id="details-modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal()">&times;</button>
+      <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;" id="modal-title">Client Assessment</h3>
+      <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem;" id="modal-subtitle">MF-CWI Algorithmic Report</p>
+      
+      <!-- Privacy Banner -->
+      <div style="padding: 0.75rem 1rem; background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 8px; font-size: 0.8125rem; color: #60a5fa; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+        <span>🔒</span> <strong>Privacy Protected:</strong> Client's raw bank account routing credentials and detailed transaction ledger balances are confidential and restricted.
+      </div>
+
+      <div class="modal-grid-2">
+        <!-- Client Profile Details -->
+        <div>
+          <div class="modal-section-title">Client Profile Data</div>
+          
+          <div class="detail-item">
+            <span class="detail-label">Username:</span>
+            <span class="detail-value" id="det-username">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Credit Rating:</span>
+            <span class="detail-value" id="det-credit">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Annual Income:</span>
+            <span class="detail-value" id="det-income">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Monthly Expenses:</span>
+            <span class="detail-value" id="det-expenses">-</span>
+          </div>
+        </div>
+
+        <!-- Algorithmic Decision Scores -->
+        <div>
+          <div class="modal-section-title">Decision Analytics</div>
+          
+          <div class="detail-item">
+            <span class="detail-label">CWI Index:</span>
+            <span class="detail-value" id="det-cwi">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">DTI Ratio:</span>
+            <span class="detail-value" id="det-dti">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Approved Ceiling:</span>
+            <span class="detail-value" id="det-approved" style="color: var(--color-success);">-</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Proposed APR:</span>
+            <span class="detail-value" id="det-roi">-</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 1.5rem;">
+        <div class="modal-section-title">Loan Request & Purpose</div>
+        <div style="background: rgba(10, 14, 26, 0.4); padding: 1rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+          <div class="detail-item" style="margin-bottom: 0.5rem;">
+            <span class="detail-label">Requested Loan:</span>
+            <span class="detail-value" id="det-requested-amount" style="color: #c084fc;">-</span>
+          </div>
+          <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5;" id="det-purpose">-</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 1.5rem;" id="modal-recommendations-wrapper">
+        <div class="modal-section-title">Matched Qualified Policies</div>
+        <div id="modal-recommendations-list">
+          <p style="color: var(--text-secondary); font-size: 0.875rem;">None</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let token = localStorage.getItem('token');
+    let username = localStorage.getItem('username');
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (!token || localStorage.getItem('role') !== 'admin') {
+        localStorage.clear();
+        window.location.href = '/login.html?role=admin';
+        return;
+      }
+      
+      document.getElementById('user-display-name').textContent = username || 'Admin';
+      document.getElementById('avatar-char').textContent = (username || 'A').charAt(0).toUpperCase();
+
+      fetchClients();
+    });
+
+    function handleLogout() {
+      localStorage.clear();
+      window.location.href = '/login.html';
+    }
+
+    async function fetchClients() {
+      try {
+        const response = await fetch('/api/admin/clients', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (!response.ok) throw new Error('Failed to fetch clients records.');
+        
+        const clients = await response.json();
+        renderClients(clients);
+      } catch (err) {
+        showGlobalAlert('danger', err.message);
+      }
+    }
+
+    function renderClients(clients) {
+      const tableContainer = document.getElementById('clients-table-container');
+      
+      // Calculate Stats
+      let totalClients = 0;
+      let totalCreditScoreSum = 0;
+      let totalRequestedAmount = 0;
+      let totalCwiSum = 0;
+      let countedProfiles = 0;
+
+      if (!clients || clients.length === 0) {
+        tableContainer.innerHTML = '<p style="color: var(--text-secondary);">No client records found.</p>';
+        updateStats(0, 0, 0, 0);
+        return;
+      }
+
+      let html = `
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Client Name</th>
+              <th>Username</th>
+              <th>Credit Score</th>
+              <th>DTI</th>
+              <th>Requested Loan</th>
+              <th>CWI</th>
+              <th>Risk Tier</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      clients.forEach(client => {
+        totalClients++;
+        
+        const hasProfile = client.full_name !== null;
+        let creditScore = '-';
+        let dti = '-';
+        let requested = '-';
+        let risk = '-';
+        let cwiText = '-';
+        let riskBadge = '';
+
+        if (hasProfile) {
+          countedProfiles++;
+          creditScore = client.credit_score;
+          totalCreditScoreSum += client.credit_score;
+          
+          dti = `${(client.debt_to_income_ratio * 100).toFixed(1)}%`;
+          requested = `$${client.requested_loan_amount.toLocaleString()}`;
+          totalRequestedAmount += client.requested_loan_amount;
+          
+          // Use database CWI if available, fall back to estimated
+          const cwiVal = (client.cwi !== null && client.cwi !== undefined) ? client.cwi : (client.risk_score === 'Low' ? 0.82 : client.risk_score === 'Medium' ? 0.61 : 0.38);
+          cwiText = (client.cwi !== null && client.cwi !== undefined) ? client.cwi.toFixed(2) : (client.approved_amount !== null ? (client.risk_score === 'Low' ? '0.78' : client.risk_score === 'Medium' ? '0.62' : '0.41') : '-');
+          totalCwiSum += cwiVal;
+          
+          if (client.risk_score === 'Low') {
+            riskBadge = `<span class="badge badge-low">Low</span>`;
+          } else if (client.risk_score === 'Medium') {
+            riskBadge = `<span class="badge badge-medium">Medium</span>`;
+          } else {
+            riskBadge = `<span class="badge badge-high">High</span>`;
+          }
+        }
+
+        html += `
+          <tr>
+            <td><strong>${client.full_name || 'Incomplete Profile'}</strong></td>
+            <td><code>${client.username}</code></td>
+            <td>${creditScore}</td>
+            <td>${dti}</td>
+            <td style="color: #c084fc; font-weight: 600;">${requested}</td>
+            <td>${cwiText}</td>
+            <td>${riskBadge || '-'}</td>
+            <td>
+              ${hasProfile 
+                ? `<button class="view-details-btn" onclick="openDetails(${client.user_id})">View Analysis</button>` 
+                : '<span style="font-size: 0.8125rem; color: var(--text-secondary);">No Data</span>'
+              }
+            </td>
+          </tr>
+        `;
+      });
+
+      html += '</tbody></table>';
+      tableContainer.innerHTML = html;
+
+      // Update Top Metrics cards
+      const avgCredit = countedProfiles > 0 ? Math.round(totalCreditScoreSum / countedProfiles) : '-';
+      const avgCwi = countedProfiles > 0 ? (totalCwiSum / countedProfiles).toFixed(2) : '0.00';
+      updateStats(totalClients, avgCredit, totalRequestedAmount, avgCwi);
+    }
+
+    function updateStats(total, avgCredit, totalRequested, avgCwi) {
+      document.getElementById('stat-total-clients').textContent = total;
+      document.getElementById('stat-avg-credit').textContent = avgCredit;
+      document.getElementById('stat-total-requested').textContent = `$${totalRequested.toLocaleString()}`;
+      document.getElementById('stat-avg-cwi').textContent = avgCwi;
+    }
+
+    // API Call: View Detailed analysis inside Modal
+    async function openDetails(userId) {
+      try {
+        const response = await fetch(`/api/admin/clients/${userId}/analysis`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (!response.ok) throw new Error('Failed to retrieve client audit detail.');
+        
+        const data = await response.json();
+        
+        // Populate modal variables
+        document.getElementById('modal-title').textContent = data.profile.full_name;
+        document.getElementById('modal-subtitle').textContent = `Credit Rating Profile for User: ${data.profile.username}`;
+        
+        document.getElementById('det-username').textContent = data.profile.username;
+        document.getElementById('det-credit').textContent = data.profile.credit_score;
+        document.getElementById('det-income').textContent = `$${data.profile.annual_income.toLocaleString()}/yr`;
+        document.getElementById('det-expenses').textContent = `$${data.profile.monthly_expenses.toLocaleString()}/mo`;
+        
+        if (data.analysis) {
+          // Use database CWI if available, fall back to estimated
+          let cwiScoreVal = (data.analysis.cwi !== null && data.analysis.cwi !== undefined) 
+            ? data.analysis.cwi.toFixed(2) 
+            : (data.analysis.risk_score === 'Low' ? '0.84' : data.analysis.risk_score === 'Medium' ? '0.63' : '0.38');
+          document.getElementById('det-cwi').textContent = cwiScoreVal;
+          document.getElementById('det-dti').textContent = `${(data.analysis.debt_to_income_ratio * 100).toFixed(1)}%`;
+          document.getElementById('det-approved').textContent = data.analysis.approved_amount > 0 
+            ? `$${data.analysis.approved_amount.toLocaleString()}` 
+            : 'Rejected';
+          document.getElementById('det-roi').textContent = `${data.analysis.interest_rate_offered}% APR`;
+          
+          document.getElementById('det-requested-amount').textContent = `$${data.profile.requested_loan_amount.toLocaleString()}`;
+          document.getElementById('det-purpose').textContent = data.profile.loan_purpose 
+            ? `Purpose: "${data.profile.loan_purpose}"` 
+            : 'Purpose: Not Specified';
+            
+          // Match qualified policies list
+          const listEl = document.getElementById('modal-recommendations-list');
+          if (data.analysis.recommendations && data.analysis.recommendations.length > 0) {
+            let listHtml = '<ul style="margin-top: 0.5rem; padding-left: 1.25rem; font-size: 0.875rem; color: var(--text-secondary);">';
+            data.analysis.recommendations.forEach(rec => {
+              listHtml += `
+                <li style="margin-bottom: 0.5rem;">
+                  <strong style="color: var(--text-primary);">${rec.bankName}</strong> offered interest rate: 
+                  <span style="color: var(--color-success); font-weight: 600;">${rec.offeredRate}% APR</span> 
+                  (Term: ${rec.termMonths} months)
+                </li>
+              `;
+            });
+            listHtml += '</ul>';
+            listEl.innerHTML = listHtml;
+          } else {
+            document.getElementById('modal-recommendations-list').innerHTML = '<p style="color: var(--text-secondary); font-size: 0.875rem;">No pre-qualified policies match this client profile.</p>';
+          }
+        } else {
+          document.getElementById('det-cwi').textContent = '-';
+          document.getElementById('det-dti').textContent = '-';
+          document.getElementById('det-approved').textContent = 'Pending Analysis';
+          document.getElementById('det-roi').textContent = '-';
+          document.getElementById('det-requested-amount').textContent = `$${data.profile.requested_loan_amount.toLocaleString()}`;
+          document.getElementById('det-purpose').textContent = data.profile.loan_purpose || 'Not Specified';
+          document.getElementById('modal-recommendations-list').innerHTML = '<p style="color: var(--text-secondary); font-size: 0.875rem;">Analysis calculations pending.</p>';
+        }
+
+        // Open modal window
+        document.getElementById('details-modal').classList.add('open');
+      } catch (err) {
+        showGlobalAlert('danger', err.message);
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('details-modal').classList.remove('open');
+    }
+
+    // Helper alerts
+    function showGlobalAlert(type, message) {
+      const container = document.getElementById('global-alert');
+      container.innerHTML = `
+        <div class="alert alert-${type}">
+          ${type === 'success' ? '✅' : '❌'} ${message}
+        </div>
+      `;
+      setTimeout(() => {
+        container.innerHTML = '';
+      }, 5000);
+    }
+  </script>
+
+</body>
+</html>

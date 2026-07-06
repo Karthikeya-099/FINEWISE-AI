@@ -1,0 +1,21 @@
+# Dependency directories
+node_modules/
+
+# Local databases
+*.db
+*.db-journal
+
+# Environment secrets
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+
+# Log files
+logs/
+*.log
+
+# OS metadata
+.DS_Store
+Thumbs.db
