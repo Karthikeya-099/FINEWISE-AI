@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-DB_PATH = os.path.join(os.path.dirname(__file__), 'finewise.db')
+DB_PATH = os.environ.get('SQLITE_DB_PATH', os.path.join(os.path.dirname(__file__), 'finewise.db'))
 
 def get_db_connection():
     """Create a new SQLite connection and configure it to return dictionary-like rows."""
