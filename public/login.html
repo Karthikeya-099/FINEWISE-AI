@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Finewise AI - Sign In / Register</title>
+  <title>Finewise AI - Authentication</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
@@ -11,128 +13,97 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: calc(100vh - 120px);
-      padding: 2rem 0;
+      min-height: calc(100vh - 140px);
+      padding: 2.5rem 1rem;
     }
     
     .auth-card {
       width: 100%;
-      max-width: 440px;
+      max-width: 450px;
+      position: relative;
     }
     
     .auth-tabs {
       display: flex;
       border-bottom: 1px solid var(--glass-border);
-      margin-bottom: 2rem;
+      margin-bottom: 1.75rem;
     }
     
     .auth-tab {
       flex: 1;
-      padding: 1rem;
+      padding: 0.85rem 1rem;
       background: transparent;
       border: none;
       color: var(--text-secondary);
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
       text-align: center;
       transition: var(--transition);
       border-bottom: 2px solid transparent;
+      font-family: var(--font-family);
     }
     
+    .auth-tab:hover {
+      color: var(--text-primary);
+    }
+
+    /* Client tab active */
     .auth-tab.active {
-      color: var(--accent-purple);
+      color: #c084fc;
       border-bottom-color: var(--accent-purple);
     }
 
-    /* Toggle Switch Component */
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 48px;
-      height: 24px;
-      flex-shrink: 0;
-    }
-    
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(255, 255, 255, 0.05);
-      transition: .3s ease;
-      border-radius: 24px;
-      border: 1px solid var(--glass-border);
-    }
-    
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 16px;
-      width: 16px;
-      left: 3px;
-      bottom: 3px;
-      background-color: var(--text-secondary);
-      transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
-      border-radius: 50%;
-    }
-    
-    input:checked + .slider {
-      background-color: rgba(239, 68, 68, 0.15);
-      border-color: #ef4444;
-    }
-    
-    input:checked + .slider:before {
-      transform: translateX(24px);
-      background-color: #ef4444;
+    /* Admin theme overrides */
+    .auth-card.admin-theme {
+      border-color: rgba(239, 68, 68, 0.35) !important;
+      box-shadow: 0 10px 35px 0 rgba(239, 68, 68, 0.15) !important;
     }
 
-    /* Admin mode UI customization */
-    .auth-card.admin-active {
-      border-color: rgba(239, 68, 68, 0.3) !important;
-      box-shadow: 0 8px 32px 0 rgba(239, 68, 68, 0.1) !important;
-    }
-
-    .auth-card.admin-active .auth-tab.active {
-      color: #ef4444 !important;
+    .auth-card.admin-theme .auth-tab.active {
+      color: #f87171 !important;
       border-bottom-color: #ef4444 !important;
     }
 
-    .admin-badge {
-      display: inline-block;
-      padding: 0.25rem 0.5rem;
-      font-size: 0.75rem;
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.775rem;
       font-weight: 700;
-      border-radius: 4px;
+      border-radius: 9999px;
+      margin-bottom: 0.85rem;
+    }
+
+    .role-badge.client-badge {
+      background: rgba(139, 92, 246, 0.15);
+      color: #c084fc;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .role-badge.admin-badge {
       background: rgba(239, 68, 68, 0.15);
       color: #f87171;
       border: 1px solid rgba(239, 68, 68, 0.3);
-      margin-left: 0.5rem;
-      vertical-align: middle;
-      animation: pulse 2s infinite;
     }
 
-    @keyframes pulse {
-      0% { opacity: 0.8; }
-      50% { opacity: 1; }
-      100% { opacity: 0.8; }
+    .input-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
     }
   </style>
 </head>
 <body>
 
-  <!-- Navigation -->
+  <!-- Sticky Navigation Bar -->
   <nav class="navbar">
     <a href="/" class="logo">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M2 17L12 22L22 17" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M2 12L12 17L22 12" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="url(#logoGrad)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2 17L12 22L22 17" stroke="url(#logoGrad)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2 12L12 17L22 12" stroke="url(#logoGrad)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
         <defs>
           <linearGradient id="logoGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
             <stop stop-color="#8B5CF6"/>
@@ -142,16 +113,31 @@
       </svg>
       Finewise AI
     </a>
+
     <div class="nav-links">
       <a href="/" class="nav-link">Home</a>
+      <a href="/login.html?role=client" class="nav-link" id="nav-client-link">Client Portal</a>
+      <a href="/login.html?role=admin" class="nav-link" id="nav-admin-link">Admin Access</a>
     </div>
+
+    <!-- Mobile Hamburger Button -->
+    <button class="hamburger-btn" onclick="toggleMobileNav()" aria-label="Toggle Menu">
+      ☰
+    </button>
   </nav>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-menu-drawer" id="mobile-menu">
+    <a href="/" class="nav-link">Home</a>
+    <a href="/login.html?role=client" class="nav-link" id="mobile-client-link">Client Portal</a>
+    <a href="/login.html?role=admin" class="nav-link" id="mobile-admin-link">Admin Access</a>
+  </div>
 
   <div class="container">
     <div class="auth-wrapper">
       <div class="glass-card auth-card" id="auth-card-el">
         
-        <!-- Auth Tabs (Login / Signup) -->
+        <!-- Auth Tabs (Login / Register) -->
         <div class="auth-tabs">
           <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Sign In</button>
           <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Register</button>
@@ -159,40 +145,55 @@
 
         <div id="alert-container"></div>
 
-        <!-- Dynamic Portal Title -->
-        <div style="text-align: center; margin-bottom: 1.25rem;">
-          <h2 id="auth-heading" style="font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #ffffff, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; transition: var(--transition);">Client Portal Login</h2>
-        </div>
-
-        <!-- Role Toggle Switch -->
-        <div class="toggle-container" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; background: rgba(255, 255, 255, 0.02); padding: 0.75rem 1rem; border: 1px solid var(--glass-border); border-radius: 8px;">
-          <div style="display: flex; flex-direction: column;">
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <span id="toggle-label-text" style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary); transition: var(--transition);">Client Mode</span>
-              <span id="admin-badge-el" style="display: none;" class="admin-badge">Admin Mode Active</span>
-            </div>
-            <span id="toggle-subtext" style="font-size: 0.75rem; color: var(--text-secondary); transition: var(--transition);">Access standard client dashboard services</span>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="role-toggle" onchange="handleRoleToggle(this)">
-            <span class="slider"></span>
-          </label>
+        <!-- Role Badge & Header -->
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <div id="role-badge-el" class="role-badge client-badge">✨ Client Workspace</div>
+          <h2 id="auth-heading" style="font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.35rem;">Client Portal Sign In</h2>
+          <p id="auth-subtext" style="font-size: 0.825rem; color: var(--text-secondary);">Access your personalized financial intelligence dashboard</p>
         </div>
 
         <!-- Authentication Form -->
         <form id="auth-form" onsubmit="handleAuthSubmit(event)">
           <div class="form-group">
-            <label class="form-label" for="username">Username</label>
-            <input type="text" id="username" class="form-control" placeholder="Enter username" required autocomplete="username">
+            <label class="form-label" for="username">
+              <span>Username</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Min. 3 characters</span>
+            </label>
+            <input 
+              type="text" 
+              id="username" 
+              class="form-control" 
+              placeholder="e.g., johndoe" 
+              required 
+              autocomplete="username" 
+              minlength="3">
           </div>
           
           <div class="form-group">
-            <label class="form-label" for="password">Password</label>
-            <input type="password" id="password" class="form-control" placeholder="Enter password" required autocomplete="current-password">
+            <label class="form-label" for="password">
+              <span>Password</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Min. 6 characters</span>
+            </label>
+            <div class="password-field-wrapper">
+              <input 
+                type="password" 
+                id="password" 
+                class="form-control" 
+                placeholder="Enter your password" 
+                required 
+                autocomplete="current-password" 
+                minlength="6">
+              <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility()" aria-label="Toggle password visibility">
+                <span id="eye-icon">👁️</span>
+              </button>
+            </div>
+            <div style="text-align: right; margin-top: 0.45rem;" id="forgot-password-container">
+              <a href="/forgot-password.html" class="nav-link" id="forgot-password-link" style="font-size: 0.775rem; color: var(--text-muted); text-decoration: none; padding: 0;">Forgot Password?</a>
+            </div>
           </div>
 
-          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; transition: var(--transition);" id="submit-btn">
-            Sign In to Dashboard
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;" id="submit-btn">
+            <span id="btn-text">Sign In to Dashboard</span>
           </button>
         </form>
 
@@ -202,70 +203,107 @@
 
   <script>
     let activeTab = 'login';
-    let activeRole = 'client';
+    let activeRole = null;
 
-    // Check query params for default role
-    window.addEventListener('DOMContentLoaded', () => {
-      const params = new URLSearchParams(window.location.search);
-      const roleParam = params.get('role');
-      
-      const toggle = document.getElementById('role-toggle');
-      if (roleParam === 'admin') {
-        toggle.checked = true;
-        updateRoleState(true);
+    // 1. Enforce query param validation immediately
+    const params = new URLSearchParams(window.location.search);
+    const roleParam = params.get('role');
+
+    if (roleParam !== 'client' && roleParam !== 'admin') {
+      // Missing or invalid role param -> redirect back to landing page
+      window.location.replace('/');
+    } else {
+      activeRole = roleParam;
+    }
+
+    function toggleMobileNav() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('open');
+    }
+
+    function togglePasswordVisibility() {
+      const pwdInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eye-icon');
+      if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+        eyeIcon.textContent = '🔒';
       } else {
-        toggle.checked = false;
-        updateRoleState(false);
+        pwdInput.type = 'password';
+        eyeIcon.textContent = '👁️';
       }
-      
-      // If user is already logged in, redirect them
+    }
+
+    // Set up portal theme and auto-redirect authenticated sessions
+    window.addEventListener('DOMContentLoaded', () => {
+      // Auto-redirect if user already has an active session
       const token = localStorage.getItem('token');
       const role = localStorage.getItem('role');
       if (token && role) {
-        window.location.href = role === 'admin' ? '/admin.html' : '/client.html';
+        window.location.href = (role === 'admin' || role === 'superior') ? '/admin.html' : '/client.html';
+        return;
       }
+
+      applyRoleTheme(activeRole);
     });
 
-    function updateRoleState(isAdmin) {
-      activeRole = isAdmin ? 'admin' : 'client';
-      
+    function applyRoleTheme(role) {
       const card = document.getElementById('auth-card-el');
       const heading = document.getElementById('auth-heading');
-      const labelText = document.getElementById('toggle-label-text');
-      const subtext = document.getElementById('toggle-subtext');
-      const badge = document.getElementById('admin-badge-el');
+      const subtext = document.getElementById('auth-subtext');
+      const badge = document.getElementById('role-badge-el');
       const submitBtn = document.getElementById('submit-btn');
+      const btnText = document.getElementById('btn-text');
+      const navClient = document.getElementById('nav-client-link');
+      const navAdmin = document.getElementById('nav-admin-link');
 
-      if (isAdmin) {
-        card.classList.add('admin-active');
+      if (role === 'admin') {
+        document.title = 'Finewise AI - Administrator Access';
+        card.classList.add('admin-theme');
+        badge.className = 'role-badge admin-badge';
+        badge.innerHTML = '🛡️ Administrator Access';
+        
         heading.style.background = 'linear-gradient(135deg, #ffffff, #f87171)';
-        heading.textContent = activeTab === 'login' ? 'Administrator Login' : 'Administrator Registration';
-        labelText.textContent = 'Administrator Mode';
-        labelText.style.color = '#f87171';
-        subtext.textContent = 'Enforce restricted system admin portal controls';
-        badge.style.display = 'inline-block';
-        submitBtn.textContent = activeTab === 'login' ? 'Login as Administrator' : 'Register Administrator';
+        heading.style.webkitBackgroundClip = 'text';
+        heading.style.webkitTextFillColor = 'transparent';
+        heading.textContent = activeTab === 'login' ? 'Administrator Sign In' : 'Administrator Registration';
+        
+        subtext.textContent = 'Restricted system auditor controls & risk management';
+        btnText.textContent = activeTab === 'login' ? 'Sign In as Administrator' : 'Register Administrator';
+        
         submitBtn.style.background = 'linear-gradient(135deg, #ef4444, #f87171)';
-      } else {
-        card.classList.remove('admin-active');
-        heading.style.background = 'linear-gradient(135deg, #ffffff, #a78bfa)';
-        heading.textContent = activeTab === 'login' ? 'Client Portal Login' : 'Client Registration';
-        labelText.textContent = 'Client Mode';
-        labelText.style.color = 'var(--text-primary)';
-        subtext.textContent = 'Access standard client dashboard services';
-        badge.style.display = 'none';
-        submitBtn.textContent = activeTab === 'login' ? 'Login as Client' : 'Register as Client';
-        submitBtn.style.background = 'linear-gradient(135deg, var(--accent-purple), var(--accent-pink))';
-      }
-      
-      heading.style.webkitBackgroundClip = 'text';
-      heading.style.webkitTextFillColor = 'transparent';
-    }
+        submitBtn.style.boxShadow = '0 4px 15px rgba(239, 68, 68, 0.3)';
 
-    function handleRoleToggle(checkbox) {
-      updateRoleState(checkbox.checked);
-      // Clear alert
-      document.getElementById('alert-container').innerHTML = '';
+        if (navAdmin) navAdmin.classList.add('active');
+        if (navClient) navClient.classList.remove('active');
+      } else {
+        document.title = 'Finewise AI - Client Portal';
+        card.classList.remove('admin-theme');
+        badge.className = 'role-badge client-badge';
+        badge.innerHTML = '✨ Client Workspace';
+
+        heading.style.background = 'linear-gradient(135deg, #ffffff, #a78bfa)';
+        heading.style.webkitBackgroundClip = 'text';
+        heading.style.webkitTextFillColor = 'transparent';
+        heading.textContent = activeTab === 'login' ? 'Client Portal Sign In' : 'Client Registration';
+
+        subtext.textContent = 'Access your personalized financial intelligence dashboard';
+        btnText.textContent = activeTab === 'login' ? 'Sign In to Dashboard' : 'Register as Client';
+
+        submitBtn.style.background = 'linear-gradient(135deg, var(--accent-purple), var(--accent-pink))';
+        submitBtn.style.boxShadow = '0 4px 15px rgba(139, 92, 246, 0.25)';
+
+        if (navClient) navClient.classList.add('active');
+        if (navAdmin) navAdmin.classList.remove('active');
+      }
+
+      const forgotLink = document.getElementById('forgot-password-link');
+      const forgotContainer = document.getElementById('forgot-password-container');
+      if (forgotLink) {
+        forgotLink.href = `/forgot-password.html?role=${role}`;
+      }
+      if (forgotContainer) {
+        forgotContainer.style.display = activeTab === 'login' ? 'block' : 'none';
+      }
     }
 
     function switchTab(tab) {
@@ -273,10 +311,7 @@
       document.getElementById('tab-login').classList.toggle('active', tab === 'login');
       document.getElementById('tab-register').classList.toggle('active', tab === 'register');
       
-      const toggle = document.getElementById('role-toggle');
-      updateRoleState(toggle.checked);
-      
-      // Clear alert
+      applyRoleTheme(activeRole);
       document.getElementById('alert-container').innerHTML = '';
     }
 
@@ -286,9 +321,16 @@
       const usernameInput = document.getElementById('username');
       const passwordInput = document.getElementById('password');
       const alertContainer = document.getElementById('alert-container');
+      const submitBtn = document.getElementById('submit-btn');
+      const btnText = document.getElementById('btn-text');
+      
+      // Loading State
+      submitBtn.disabled = true;
+      btnText.innerHTML = '<span class="spinner"></span> Authenticating...';
+      alertContainer.innerHTML = '';
       
       const payload = {
-        username: usernameInput.value,
+        username: usernameInput.value.trim(),
         password: passwordInput.value,
         role: activeRole
       };
@@ -307,47 +349,49 @@
         const data = await response.json();
         
         if (!response.ok) {
-          throw new Error(data.error || 'Something went wrong.');
+          throw new Error(data.error || 'Authentication failed. Please check your credentials.');
         }
         
         if (activeTab === 'login') {
-          // Store token in local storage
           localStorage.setItem('token', data.token);
           localStorage.setItem('role', data.role);
           localStorage.setItem('username', data.username);
           
           alertContainer.innerHTML = `
             <div class="alert alert-success">
-              Access granted. Redirecting to your dashboard...
+              <span>✅</span> Access granted. Redirecting to dashboard...
             </div>
           `;
           
           setTimeout(() => {
-            if (data.role === 'admin') {
+            if (data.role === 'admin' || data.role === 'superior') {
               window.location.href = '/admin.html';
             } else {
               window.location.href = '/client.html';
             }
-          }, 1000);
+          }, 700);
           
         } else {
           alertContainer.innerHTML = `
             <div class="alert alert-success">
-              Registration successful! Please login below.
+              <span>🎉</span> Registration successful! Please sign in below.
             </div>
           `;
           switchTab('login');
           passwordInput.value = '';
+          submitBtn.disabled = false;
+          applyRoleTheme(activeRole);
         }
       } catch (err) {
         alertContainer.innerHTML = `
           <div class="alert alert-danger">
-            ${err.message}
+            <span>❌</span> ${err.message}
           </div>
         `;
+        submitBtn.disabled = false;
+        applyRoleTheme(activeRole);
       }
     }
   </script>
-
 </body>
 </html>

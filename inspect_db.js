@@ -1,46 +1,53 @@
-const { dbAll } = require('./database');
+require('dotenv').config();
+const { connectDb, mongoose } = require('./database');
+const {
+  User,
+  ClientProfile,
+  BankAccount,
+  PreviousLoan,
+  LoanAnalysis,
+  PasswordResetRequest,
+  AuditLog
+} = require('./models');
 
-async function showDatabaseContents() {
+async function inspectDb() {
+  console.log('--- MongoDB Finewise Database Inspector ---');
   try {
-    console.log('==================================================');
-    console.log('         FINEWISE AI - DATABASE DUMP');
-    console.log('==================================================\n');
+    await connectDb();
 
-    // 1. Users Table
-    const users = await dbAll("SELECT id, username, role, created_at FROM users");
-    console.log(`[USERS TABLE] - Total Rows: ${users.length}`);
-    console.table(users);
-    console.log('\n--------------------------------------------------\n');
+    console.log('\n[1. Users]');
+    const users = await User.find().select('username role createdAt');
+    console.log(JSON.stringify(users, null, 2));
 
-    // 2. Client Profiles Table
-    const profiles = await dbAll("SELECT * FROM client_profiles");
-    console.log(`[CLIENT PROFILES TABLE] - Total Rows: ${profiles.length}`);
-    console.table(profiles);
-    console.log('\n--------------------------------------------------\n');
+    console.log('\n[2. Client Profiles]');
+    const profiles = await ClientProfile.find();
+    console.log(JSON.stringify(profiles, null, 2));
 
-    // 3. Bank Accounts Table
-    const accounts = await dbAll("SELECT * FROM bank_accounts");
-    console.log(`[BANK ACCOUNTS TABLE] - Total Rows: ${accounts.length}`);
-    console.table(accounts);
-    console.log('\n--------------------------------------------------\n');
+    console.log('\n[3. Bank Accounts]');
+    const accounts = await BankAccount.find();
+    console.log(JSON.stringify(accounts, null, 2));
 
-    // 4. Previous Loans Table
-    const loans = await dbAll("SELECT * FROM previous_loans");
-    console.log(`[PREVIOUS LOANS TABLE] - Total Rows: ${loans.length}`);
-    console.table(loans);
-    console.log('\n--------------------------------------------------\n');
+    console.log('\n[4. Previous Loans]');
+    const loans = await PreviousLoan.find();
+    console.log(JSON.stringify(loans, null, 2));
 
-    // 5. Loan Analysis Table
-    const analysis = await dbAll("SELECT id, user_id, cwi, risk_score, approved_amount, debt_to_income_ratio, interest_rate_offered FROM loan_analysis");
-    console.log(`[LOAN ANALYSIS TABLE] - Total Rows: ${analysis.length}`);
-    console.table(analysis);
-    console.log('\n==================================================');
+    console.log('\n[5. Loan Analysis]');
+    const analysis = await LoanAnalysis.find();
+    console.log(JSON.stringify(analysis, null, 2));
+
+    console.log('\n[6. Password Reset Requests]');
+    const requests = await PasswordResetRequest.find();
+    console.log(JSON.stringify(requests, null, 2));
+
+    console.log('\n[7. Audit Logs]');
+    const auditLogs = await AuditLog.find().limit(10);
+    console.log(JSON.stringify(auditLogs, null, 2));
 
   } catch (err) {
-    console.error('Error reading SQLite tables:', err.message);
+    console.error('Inspect DB Error:', err.message);
   } finally {
-    process.exit(0);
+    await mongoose.connection.close();
   }
 }
 
-showDatabaseContents();
+inspectDb();

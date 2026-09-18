@@ -1,4 +1,4 @@
-const { dbGet, dbAll, dbRun } = require('../database');
+const { ClientProfile, BankAccount, PreviousLoan, LoanAnalysis } = require('../models');
 
 /**
  * Multi-Factor Creditworthiness Index (MF-CWI) Algorithm
@@ -7,13 +7,13 @@ const { dbGet, dbAll, dbRun } = require('../database');
  */
 const runAnalysis = async (userId) => {
   // 1. Fetch data
-  const profile = await dbGet('SELECT * FROM client_profiles WHERE user_id = ?', [userId]);
+  const profile = await ClientProfile.findOne({ userId });
   if (!profile) {
     throw new Error('Client profile not found. Complete profile details first.');
   }
 
-  const bankAccounts = await dbAll('SELECT * FROM bank_accounts WHERE user_id = ?', [userId]);
-  const previousLoans = await dbAll('SELECT * FROM previous_loans WHERE user_id = ?', [userId]);
+  const bankAccounts = await BankAccount.find({ userId });
+  const previousLoans = await PreviousLoan.find({ userId });
 
   const { credit_score, annual_income, monthly_expenses, requested_loan_amount } = profile;
 
@@ -155,7 +155,6 @@ const runAnalysis = async (userId) => {
     .filter((policy) => credit_score >= policy.minCreditScore && dti <= policy.maxDti)
     .map((policy) => {
       // Adjust interest rate slightly based on client's CWI
-      // Higher CWI = closer to the base rate of the bank policy
       const adjustedRate = policy.baseInterest + (1 - cwi) * 0.05;
       const finalRate = Math.min(adjustedRate, policy.baseInterest + 0.06);
 
@@ -178,37 +177,38 @@ const runAnalysis = async (userId) => {
     })
     .sort((a, b) => a.offeredRate - b.offeredRate);
 
-  // 3. Save / Update analysis in database
-  const existingAnalysis = await dbGet('SELECT id FROM loan_analysis WHERE user_id = ?', [userId]);
-
-  const recString = JSON.stringify(recommendations);
+  // 3. Save / Update analysis in MongoDB
   const roundedDti = parseFloat(dti.toFixed(4));
   const roundedRoi = parseFloat((roi * 100).toFixed(2));
   const roundedApproved = parseFloat(approvedAmount.toFixed(2));
   const roundedCwi = parseFloat(cwi.toFixed(4));
 
-  if (existingAnalysis) {
-    await dbRun(
-      `UPDATE loan_analysis 
-       SET cwi = ?, risk_score = ?, approved_amount = ?, debt_to_income_ratio = ?, interest_rate_offered = ?, recommendations = ?, created_at = CURRENT_TIMESTAMP
-       WHERE user_id = ?`,
-      [roundedCwi, riskScore, roundedApproved, roundedDti, roundedRoi, recString, userId]
-    );
-  } else {
-    await dbRun(
-      `INSERT INTO loan_analysis (user_id, cwi, risk_score, approved_amount, debt_to_income_ratio, interest_rate_offered, recommendations)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [userId, roundedCwi, riskScore, roundedApproved, roundedDti, roundedRoi, recString]
-    );
-  }
+  await LoanAnalysis.findOneAndUpdate(
+    { userId },
+    {
+      userId,
+      cwi: roundedCwi,
+      risk_score: riskScore,
+      approved_amount: roundedApproved,
+      debt_to_income_ratio: roundedDti,
+      interest_rate_offered: roundedRoi,
+      recommendations
+    },
+    { new: true, upsert: true }
+  );
 
   return {
-    userId,
-    cwi: parseFloat(cwi.toFixed(4)),
+    userId: userId.toString(),
+    user_id: userId.toString(),
+    cwi: roundedCwi,
     riskScore,
+    risk_score: riskScore,
     approvedAmount: roundedApproved,
+    approved_amount: roundedApproved,
     debtToIncomeRatio: roundedDti,
+    debt_to_income_ratio: roundedDti,
     interestRateOffered: roundedRoi,
+    interest_rate_offered: roundedRoi,
     recommendations
   };
 };

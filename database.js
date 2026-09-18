@@ -1,127 +1,88 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const { User } = require('./models');
 
-const dbPath = path.resolve(__dirname, 'finewise.db');
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error('Error opening database', err.message);
-  } else {
-    console.log('Connected to the SQLite database.');
-  }
-});
-
-// Helper functions for async/await
-const dbRun = (sql, params = []) => {
-  return new Promise((resolve, reject) => {
-    db.run(sql, params, function (err) {
-      if (err) reject(err);
-      else resolve({ id: this.lastID, changes: this.changes });
-    });
-  });
+// Configure MongoDB Atlas / Local MongoDB URI
+const getMongoUri = () => {
+  return process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/finewise';
 };
 
-const dbGet = (sql, params = []) => {
-  return new Promise((resolve, reject) => {
-    db.get(sql, params, (err, row) => {
-      if (err) reject(err);
-      else resolve(row);
-    });
-  });
-};
+let isConnected = false;
 
-const dbAll = (sql, params = []) => {
-  return new Promise((resolve, reject) => {
-    db.all(sql, params, (err, rows) => {
-      if (err) reject(err);
-      else resolve(rows);
-    });
-  });
-};
+// Connect to MongoDB
+const connectDb = async () => {
+  if (isConnected) return mongoose.connection;
 
-// Initialize tables
-const initDb = async () => {
-  await dbRun(`
-    CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT UNIQUE NOT NULL,
-      password TEXT NOT NULL,
-      role TEXT CHECK(role IN ('client', 'admin')) NOT NULL,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-
-  await dbRun(`
-    CREATE TABLE IF NOT EXISTS client_profiles (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER UNIQUE NOT NULL,
-      full_name TEXT NOT NULL,
-      credit_score INTEGER NOT NULL,
-      annual_income REAL NOT NULL,
-      monthly_expenses REAL NOT NULL,
-      requested_loan_amount REAL NOT NULL,
-      loan_purpose TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-    )
-  `);
-
-  await dbRun(`
-    CREATE TABLE IF NOT EXISTS bank_accounts (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER NOT NULL,
-      bank_name TEXT NOT NULL,
-      account_number TEXT NOT NULL,
-      account_type TEXT NOT NULL,
-      balance REAL NOT NULL,
-      routing_number TEXT NOT NULL,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-    )
-  `);
-
-  await dbRun(`
-    CREATE TABLE IF NOT EXISTS previous_loans (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER NOT NULL,
-      lender_name TEXT NOT NULL,
-      loan_amount REAL NOT NULL,
-      remaining_balance REAL NOT NULL,
-      monthly_payment REAL NOT NULL,
-      status TEXT CHECK(status IN ('active', 'paid')) NOT NULL,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-    )
-  `);
-
-  await dbRun(`
-    CREATE TABLE IF NOT EXISTS loan_analysis (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER UNIQUE NOT NULL,
-      cwi REAL,
-      risk_score TEXT NOT NULL,
-      approved_amount REAL NOT NULL,
-      debt_to_income_ratio REAL NOT NULL,
-      interest_rate_offered REAL NOT NULL,
-      recommendations TEXT NOT NULL, -- JSON string
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-    )
-  `);
+  const mongoUri = getMongoUri();
+  const isAtlas = mongoUri.includes('mongodb+srv') || mongoUri.includes('mongodb.net');
 
   try {
-    await dbRun('ALTER TABLE loan_analysis ADD COLUMN cwi REAL');
-    console.log('Migration: Added cwi column to loan_analysis table.');
+    console.log(`[MongoDB] Connecting to ${isAtlas ? 'MongoDB Atlas Cluster' : 'MongoDB Instance'}...`);
+    
+    await mongoose.connect(mongoUri, {
+      autoIndex: true,
+      serverSelectionTimeoutMS: 8000,
+      socketTimeoutMS: 45000,
+    });
+
+    isConnected = true;
+    console.log(`[MongoDB] Successfully connected to: ${isAtlas ? 'MongoDB Atlas' : mongoUri}`);
+
+    return mongoose.connection;
   } catch (err) {
-    // Ignore if column already exists
+    console.error('\n======================================================');
+    console.error('❌ MongoDB Connection Error:', err.message);
+    console.error('======================================================');
+    if (isAtlas) {
+      console.error('👉 Please verify your MongoDB Atlas connection settings in .env:');
+      console.error('   1. Check your database username & password');
+      console.error('   2. Verify Network Access / IP Whitelist in MongoDB Atlas (e.g. 0.0.0.0/0 for everywhere)');
+      console.error('   3. Ensure connection string format: mongodb+srv://<user>:<password>@cluster.mongodb.net/finewise?retryWrites=true&w=majority');
+    } else {
+      console.error('👉 If connecting to MongoDB Atlas, add your connection string to .env:');
+      console.error('   MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/finewise?retryWrites=true&w=majority');
+    }
+    console.error('======================================================\n');
+    throw err;
+  }
+};
+
+// Listen to connection events
+mongoose.connection.on('disconnected', () => {
+  isConnected = false;
+  console.warn('[MongoDB] Connection lost. Attempting auto-reconnect...');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('[MongoDB] Connection error event:', err.message);
+});
+
+// Initialize database & seed defaults
+const initDb = async () => {
+  await connectDb();
+
+  // Seed default Superior account if none exists
+  try {
+    const existingSuperior = await User.findOne({ role: 'superior' });
+    if (!existingSuperior) {
+      const hashedPassword = await bcrypt.hash('SuperiorPassword123', 10);
+      await User.create({
+        username: 'superior',
+        password: hashedPassword,
+        role: 'superior'
+      });
+      console.log('✅ Seeded default Superior Administrator account (Username: superior | Password: SuperiorPassword123)');
+    }
+  } catch (seedErr) {
+    console.error('[MongoDB] Superior account seed check error:', seedErr.message);
   }
 
-  console.log('Database tables initialized successfully.');
+  console.log('✅ MongoDB models and indexes ready.');
+  return mongoose.connection;
 };
 
 module.exports = {
-  db,
-  dbRun,
-  dbGet,
-  dbAll,
+  mongoose,
+  connectDb,
   initDb
 };

@@ -19,10 +19,10 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-const requireRole = (role) => {
+const requireRole = (...roles) => {
   return (req, res, next) => {
-    if (!req.user || req.user.role !== role) {
-      return res.status(403).json({ error: `Forbidden: Requires ${role} access rights.` });
+    if (!req.user || !roles.includes(req.user.role)) {
+      return res.status(403).json({ error: `Forbidden: Requires ${roles.join(' or ')} access rights.` });
     }
     next();
   };

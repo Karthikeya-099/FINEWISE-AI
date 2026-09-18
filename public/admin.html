@@ -3,71 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Finewise AI - Admin Intelligence Dashboard</title>
+  <title>Finewise AI - Administrator & Superior Workspace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
-    .workspace-grid {
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      min-height: calc(100vh - 73px);
+    .content-section {
+      display: none;
+      animation: fadeIn 0.35s ease-out;
     }
     
-    .admin-sidebar {
-      background: var(--bg-secondary);
-      border-right: 1px solid var(--glass-border);
-      padding: 2rem 1rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+    .content-section.active {
+      display: block;
     }
     
-    .sidebar-menu {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    
-    .user-profile-badge {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.5rem;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--glass-border);
-      border-radius: 8px;
-    }
-
-    .user-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      color: white;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .view-details-btn {
-      padding: 0.35rem 0.75rem;
+      padding: 0.35rem 0.8rem;
       font-size: 0.8125rem;
       font-weight: 600;
       border-radius: 6px;
       cursor: pointer;
-      background: rgba(139, 92, 246, 0.1);
+      background: rgba(139, 92, 246, 0.12);
       border: 1px solid rgba(139, 92, 246, 0.3);
       color: #c084fc;
       transition: var(--transition);
+      font-family: var(--font-family);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
     }
 
     .view-details-btn:hover {
       background: var(--accent-purple);
       color: white;
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
     }
 
-    /* Modal Layout grid */
     .modal-grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -75,22 +52,28 @@
       margin-top: 1.25rem;
     }
 
+    @media (max-width: 700px) {
+      .modal-grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .modal-section-title {
-      font-size: 0.875rem;
+      font-size: 0.825rem;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-secondary);
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
       border-bottom: 1px solid var(--glass-border);
-      padding-bottom: 0.35rem;
-      margin-bottom: 0.75rem;
-      font-weight: 600;
+      padding-bottom: 0.4rem;
+      margin-bottom: 0.85rem;
+      font-weight: 700;
     }
 
     .detail-item {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 0.5rem;
-      font-size: 0.9375rem;
+      margin-bottom: 0.6rem;
+      font-size: 0.925rem;
     }
 
     .detail-label {
@@ -102,29 +85,85 @@
       color: var(--text-primary);
     }
 
-    @media (max-width: 900px) {
-      .workspace-grid {
-        grid-template-columns: 1fr;
-      }
-      .admin-sidebar {
-        border-right: none;
-        border-bottom: 1px solid var(--glass-border);
-        padding: 1rem;
-      }
+    .badge-superior-tag {
+      background: rgba(234, 179, 8, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(234, 179, 8, 0.3);
+      font-size: 0.725rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .badge-admin-tag {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      font-size: 0.725rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .table-actions-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-badge-count {
+      background: #ef4444;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 0.1rem 0.45rem;
+      border-radius: 9999px;
+      margin-left: auto;
+    }
+
+    .credential-copy-box {
+      background: rgba(13, 19, 34, 0.9);
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      padding: 1.25rem;
+      border-radius: var(--border-radius-sm);
+      text-align: center;
+      margin: 1.25rem 0;
+    }
+
+    .credential-code-val {
+      font-family: monospace;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #34d399;
+      letter-spacing: 0.06em;
+      background: rgba(52, 211, 153, 0.12);
+      border: 1px dashed rgba(52, 211, 153, 0.35);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      display: inline-block;
+      margin: 0.75rem 0;
+      user-select: all;
     }
   </style>
 </head>
 <body>
 
-  <!-- Navbar -->
+  <!-- Sticky Navbar -->
   <nav class="navbar">
     <a href="/" class="logo">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M2 17L12 22L22 17" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M2 12L17 12L22 12" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="url(#logoGradAdmin)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2 17L12 22L22 17" stroke="url(#logoGradAdmin)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2 12L12 17L22 12" stroke="url(#logoGradAdmin)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
         <defs>
-          <linearGradient id="logoGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+          <linearGradient id="logoGradAdmin" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
             <stop stop-color="#3B82F6"/>
             <stop offset="1" stop-color="#8B5CF6"/>
           </linearGradient>
@@ -132,25 +171,41 @@
       </svg>
       Finewise AI
     </a>
-    <div class="user-profile-badge">
-      <div class="user-avatar" id="avatar-char">A</div>
-      <div>
-        <div style="font-size: 0.875rem; font-weight: 600;" id="user-display-name">Admin</div>
-        <div style="font-size: 0.75rem; color: var(--text-secondary);">Administrator Account</div>
+
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <div class="user-profile-badge">
+        <div class="user-avatar" id="avatar-char" style="background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));">A</div>
+        <div>
+          <div style="font-size: 0.875rem; font-weight: 600;" id="user-display-name">Admin</div>
+          <div style="font-size: 0.725rem;" id="user-role-label">Administrator</div>
+        </div>
       </div>
+      <button class="hamburger-btn" onclick="toggleSidebarMenu()" aria-label="Toggle Workspace Menu">
+        📂
+      </button>
     </div>
   </nav>
 
   <div class="workspace-grid">
-    <!-- Sidebar -->
-    <aside class="admin-sidebar">
+    <!-- Sidebar Navigation -->
+    <aside class="dashboard-sidebar" id="dashboard-sidebar">
       <div class="sidebar-menu">
-        <button class="sidebar-btn active">
+        <button class="sidebar-btn active" id="btn-sect-clients" onclick="switchSection('clients')">
           <span>👥</span> Clients Directory
+        </button>
+        <button class="sidebar-btn" id="btn-sect-admins" onclick="switchSection('admins')">
+          <span>🛡️</span> Admin Accounts
+        </button>
+        <button class="sidebar-btn" id="btn-sect-requests" onclick="switchSection('requests')" style="display: none;">
+          <span>🔑</span> Reset Requests
+          <span class="nav-badge-count" id="pending-requests-count" style="display: none;">0</span>
+        </button>
+        <button class="sidebar-btn" id="btn-sect-audit" onclick="switchSection('audit')" style="display: none;">
+          <span>📜</span> Audit Logs
         </button>
       </div>
       
-      <button class="sidebar-btn" onclick="handleLogout()" style="color: var(--color-danger); margin-top: auto;">
+      <button class="sidebar-btn btn-danger-outline" onclick="handleLogout()" style="margin-top: auto;">
         <span>🚪</span> Sign Out
       </button>
     </aside>
@@ -159,144 +214,472 @@
     <main class="main-content">
       <div id="global-alert"></div>
 
-      <div style="margin-bottom: 2rem;">
-        <h2 style="font-size: 1.75rem; font-weight: 700;">Client Risk Directory</h2>
-        <p style="color: var(--text-secondary);">Review client risk parameters and generated CWI analysis metrics.</p>
-      </div>
+      <!-- ========================================== -->
+      <!-- 1. CLIENTS DIRECTORY SECTION -->
+      <!-- ========================================== -->
+      <section id="sect-clients" class="content-section active">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h2 style="font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em;">Client Risk Directory</h2>
+            <p style="color: var(--text-secondary); font-size: 0.95rem;">Review applicant parameters, creditworthiness index (MF-CWI), and loan ceilings.</p>
+          </div>
+          <div id="role-status-badge"></div>
+        </div>
 
-      <!-- Stats row -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-title">Client Applications</div>
-          <div class="stat-value" id="stat-total-clients">0</div>
-          <div class="stat-meta">Total client files recorded</div>
+        <!-- Stats row -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-title">Client Files</div>
+            <div class="stat-value" id="stat-total-clients">0</div>
+            <div class="stat-meta">Total client registrations</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-title">Average Credit Score</div>
+            <div class="stat-value" id="stat-avg-credit">-</div>
+            <div class="stat-meta">Model population average</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-title">Requested Volume</div>
+            <div class="stat-value" id="stat-total-requested">$0</div>
+            <div class="stat-meta">Total credit demand</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-title">Average CWI Score</div>
+            <div class="stat-value" id="stat-avg-cwi">0.00</div>
+            <div class="stat-meta">Multi-vector rating mean</div>
+          </div>
         </div>
-        <div class="stat-card">
-          <div class="stat-title">Average Credit Score</div>
-          <div class="stat-value" id="stat-avg-credit">-</div>
-          <div class="stat-meta">Model population mean</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-title">Total Requested Volume</div>
-          <div class="stat-value" id="stat-total-requested">$0</div>
-          <div class="stat-meta">Pending and review loans</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-title">Average CWI Score</div>
-          <div class="stat-value" id="stat-avg-cwi">0.00</div>
-          <div class="stat-meta">Credit stability average</div>
-        </div>
-      </div>
 
-      <!-- Clients Table -->
-      <div class="glass-card">
-        <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1.25rem;">Submissions List</h3>
-        <div id="clients-table-container" class="table-container">
-          <p style="color: var(--text-secondary);">Loading clients records...</p>
+        <!-- Clients Directory Card -->
+        <div class="glass-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+            <h3 style="font-size: 1.15rem; font-weight: 700;">Submissions & Risk Audit List</h3>
+          </div>
+
+          <!-- Search & Filter Controls -->
+          <div class="search-filter-bar">
+            <div class="search-input-wrapper">
+              <span class="search-icon">🔍</span>
+              <input 
+                type="text" 
+                id="search-input" 
+                class="form-control" 
+                placeholder="Search by client name or username..." 
+                oninput="filterClientTable()">
+            </div>
+
+            <select id="risk-filter" class="form-control filter-select" onchange="filterClientTable()">
+              <option value="all">All Risk Tiers</option>
+              <option value="Low">Low Risk</option>
+              <option value="Medium">Medium Risk</option>
+              <option value="High">High Risk</option>
+            </select>
+          </div>
+
+          <!-- Table Container -->
+          <div id="clients-table-container" class="table-container">
+            <div class="skeleton skeleton-card"></div>
+          </div>
         </div>
-      </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- 2. ADMINISTRATOR MANAGEMENT SECTION -->
+      <!-- ========================================== -->
+      <section id="sect-admins" class="content-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h2 style="font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em;">Administrator Accounts</h2>
+            <p style="color: var(--text-secondary); font-size: 0.95rem;">System auditors and supervisory credentials directory.</p>
+          </div>
+          <div id="create-admin-btn-container"></div>
+        </div>
+
+        <div id="admin-notice-banner"></div>
+
+        <div class="glass-card">
+          <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1.25rem;">Authorized Personnel Ledger</h3>
+          <div id="admins-table-container" class="table-container">
+            <div class="skeleton skeleton-card"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- 3. RESET REQUESTS SECTION (SUPERIOR ONLY) -->
+      <!-- ========================================== -->
+      <section id="sect-requests" class="content-section">
+        <div style="margin-bottom: 2rem;">
+          <h2 style="font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em;">Password Reset Authorization</h2>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">Review pending user reset requests. Authorize credential resets securely using your Superior PIN.</p>
+        </div>
+
+        <div class="glass-card">
+          <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1.25rem;">Inbound Reset Requests Ledger</h3>
+          <div id="requests-table-container" class="table-container">
+            <div class="skeleton skeleton-card"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- 4. SECURITY AUDIT LOGS SECTION (SUPERIOR ONLY) -->
+      <!-- ========================================== -->
+      <section id="sect-audit" class="content-section">
+        <div style="margin-bottom: 2rem;">
+          <h2 style="font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em;">Security Audit Logs</h2>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">Cryptographic audit trail tracking all password reset attempts, PIN verifications, and administrative modifications.</p>
+        </div>
+
+        <div class="glass-card">
+          <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1.25rem;">Administrative Event Logs</h3>
+          <div id="audit-table-container" class="table-container">
+            <div class="skeleton skeleton-card"></div>
+          </div>
+        </div>
+      </section>
+
     </main>
   </div>
 
-  <!-- Detail Viewer Modal (Admin Hides Bank Credentials/Account Numbers) -->
+  <!-- Detail Viewer / Editor Modal (Strictly Masks Bank Account Credentials) -->
   <div class="modal" id="details-modal">
-    <div class="modal-content">
+    <div class="modal-content" style="max-width: 680px;">
       <button class="close-btn" onclick="closeModal()">&times;</button>
-      <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;" id="modal-title">Client Assessment</h3>
-      <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem;" id="modal-subtitle">MF-CWI Algorithmic Report</p>
+      <h3 style="font-size: 1.45rem; font-weight: 800; margin-bottom: 0.35rem;" id="modal-title">Client Assessment</h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;" id="modal-subtitle">MF-CWI Algorithmic Report</p>
       
-      <!-- Privacy Banner -->
-      <div style="padding: 0.75rem 1rem; background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 8px; font-size: 0.8125rem; color: #60a5fa; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
-        <span>🔒</span> <strong>Privacy Protected:</strong> Client's raw bank account routing credentials and detailed transaction ledger balances are confidential and restricted.
-      </div>
-
-      <div class="modal-grid-2">
-        <!-- Client Profile Details -->
+      <!-- Privacy Assurance Banner -->
+      <div style="padding: 0.85rem 1rem; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: var(--border-radius-sm); font-size: 0.825rem; color: #60a5fa; display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 1.5rem; line-height: 1.5;">
+        <span style="font-size: 1rem;">🔒</span>
         <div>
-          <div class="modal-section-title">Client Profile Data</div>
+          <strong>Privacy Enforced:</strong> Raw bank account numbers, routing codes, and ledger credentials are restricted and masked from all views.
+        </div>
+      </div>
+
+      <form id="edit-client-form" onsubmit="handleSaveClientProfile(event)">
+        <input type="hidden" id="edit-client-id">
+
+        <div class="modal-grid-2">
+          <!-- Client Profile Details -->
+          <div>
+            <div class="modal-section-title">Client Profile Data</div>
+            
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label class="form-label" style="font-size: 0.8rem;" for="edit-client-name">Full Name</label>
+              <input type="text" id="edit-client-name" class="form-control" style="padding: 0.5rem 0.75rem; font-size: 0.875rem;" required>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label class="form-label" style="font-size: 0.8rem;" for="edit-client-credit">Credit Score (300-850)</label>
+              <input type="number" id="edit-client-credit" class="form-control" min="300" max="850" style="padding: 0.5rem 0.75rem; font-size: 0.875rem;" required>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label class="form-label" style="font-size: 0.8rem;" for="edit-client-income">Annual Income ($)</label>
+              <input type="number" id="edit-client-income" class="form-control" min="0" style="padding: 0.5rem 0.75rem; font-size: 0.875rem;" required>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label class="form-label" style="font-size: 0.8rem;" for="edit-client-expenses">Monthly Expenses ($)</label>
+              <input type="number" id="edit-client-expenses" class="form-control" min="0" style="padding: 0.5rem 0.75rem; font-size: 0.875rem;" required>
+            </div>
+          </div>
+
+          <!-- Algorithmic Decision Scores -->
+          <div>
+            <div class="modal-section-title">AI Decision Analytics</div>
+            
+            <div class="detail-item">
+              <span class="detail-label">CWI Score:</span>
+              <span class="detail-value" id="det-cwi">-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">DTI Ratio:</span>
+              <span class="detail-value" id="det-dti">-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Approved Ceiling:</span>
+              <span class="detail-value" id="det-approved" style="color: var(--color-success); font-weight: 700;">-</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Proposed APR:</span>
+              <span class="detail-value" id="det-roi">-</span>
+            </div>
+
+            <div style="margin-top: 1.25rem;">
+              <div class="form-group" style="margin-bottom: 0.75rem;">
+                <label class="form-label" style="font-size: 0.8rem;" for="edit-client-loan-amount">Requested Loan ($)</label>
+                <input type="number" id="edit-client-loan-amount" class="form-control" min="1" style="padding: 0.5rem 0.75rem; font-size: 0.875rem;" required>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0.75rem;">
+                <label class="form-label" style="font-size: 0.8rem;" for="edit-client-purpose">Loan Purpose</label>
+                <input type="text" id="edit-client-purpose" class="form-control" style="padding: 0.5rem 0.75rem; font-size: 0.875rem;" placeholder="e.g. Debt Consolidation">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.25rem;" id="modal-recommendations-wrapper">
+          <div class="modal-section-title">Matched Policy Offers</div>
+          <div id="modal-recommendations-list">
+            <p style="color: var(--text-muted); font-size: 0.875rem;">None</p>
+          </div>
+        </div>
+
+        <div id="modal-edit-action-container" style="margin-top: 1.75rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+          <div id="modal-superior-reset-btn-slot"></div>
+          <div style="display: flex; gap: 0.75rem; margin-left: auto;">
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
+            <button type="submit" class="btn btn-primary" id="btn-save-client-changes" style="display: none;">
+              <span>💾 Save & Recalculate AI Score</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Create/Edit Administrator Modal (Superior Only) -->
+  <div class="modal" id="admin-modal">
+    <div class="modal-content" style="max-width: 440px;">
+      <button class="close-btn" onclick="closeAdminModal()">&times;</button>
+      <h3 style="font-size: 1.35rem; font-weight: 800; margin-bottom: 0.35rem;" id="admin-modal-title">Add Administrator</h3>
+      <p style="font-size: 0.825rem; color: var(--text-muted); margin-bottom: 1.25rem;" id="admin-modal-subtitle">Provision auditor access credentials</p>
+
+      <form id="admin-account-form" onsubmit="handleAdminFormSubmit(event)">
+        <input type="hidden" id="admin-modal-id">
+
+        <div class="form-group">
+          <label class="form-label" for="admin-modal-username">Username</label>
+          <input type="text" id="admin-modal-username" class="form-control" placeholder="e.g., auditor_jane" required minlength="3">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="admin-modal-password">
+            <span>Password</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted);" id="admin-password-hint">Min. 6 characters</span>
+          </label>
+          <input type="password" id="admin-modal-password" class="form-control" placeholder="Enter password" minlength="6">
+        </div>
+
+        <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeAdminModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-admin">
+            <span id="btn-save-admin-text">Save Administrator</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- PIN-Gated Password Reset Modal (Superior Only) -->
+  <div class="modal" id="pin-reset-modal">
+    <div class="modal-content" style="max-width: 460px;">
+      <button class="close-btn" onclick="closePinResetModal()">&times;</button>
+      <h3 style="font-size: 1.35rem; font-weight: 800; margin-bottom: 0.35rem; color: #fbbf24;">🔐 PIN-Gated Password Reset</h3>
+      <p style="font-size: 0.825rem; color: var(--text-muted); margin-bottom: 1.25rem;" id="pin-reset-subtitle">Enter your Superior Security PIN to authorize reset</p>
+
+      <div id="pin-modal-alert"></div>
+
+      <!-- State 1: Input Form -->
+      <form id="pin-reset-form" onsubmit="handleExecutePinReset(event)">
+        <input type="hidden" id="pin-target-user-id">
+        <input type="hidden" id="pin-request-id">
+
+        <div style="padding: 0.85rem 1rem; background: rgba(234, 179, 8, 0.08); border: 1px solid rgba(234, 179, 8, 0.25); border-radius: var(--border-radius-sm); font-size: 0.85rem; color: #fbbf24; margin-bottom: 1.25rem;">
+          Target Account: <strong id="pin-target-username-display" style="color: white;">-</strong>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="superior-pin-input">
+            <span>Superior Security PIN</span>
+            <span style="font-size: 0.75rem; color: #fbbf24;">Required</span>
+          </label>
+          <input 
+            type="password" 
+            id="superior-pin-input" 
+            class="form-control" 
+            placeholder="Enter Superior PIN" 
+            required 
+            autocomplete="off"
+            style="letter-spacing: 0.25em; font-size: 1.2rem; text-align: center;">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="custom-new-password">
+            <span>Custom New Password (Optional)</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Leave empty to auto-generate</span>
+          </label>
+          <input 
+            type="password" 
+            id="custom-new-password" 
+            class="form-control" 
+            placeholder="Min. 6 chars (or auto-generate)" 
+            minlength="6">
+        </div>
+
+        <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="closePinResetModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-execute-pin-reset" style="background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);">
+            <span id="btn-execute-pin-text">Verify PIN & Reset</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- State 2: Success Result Box -->
+      <div id="pin-reset-success-box" style="display: none;">
+        <div class="credential-copy-box">
+          <div style="font-size: 0.8rem; color: #34d399; font-weight: 700; margin-bottom: 0.25rem;">✅ Password Successfully Reset</div>
+          <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Previous credentials invalidated. Provide this temporary credential to the user:</p>
           
-          <div class="detail-item">
-            <span class="detail-label">Username:</span>
-            <span class="detail-value" id="det-username">-</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Credit Rating:</span>
-            <span class="detail-value" id="det-credit">-</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Annual Income:</span>
-            <span class="detail-value" id="det-income">-</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Monthly Expenses:</span>
-            <span class="detail-value" id="det-expenses">-</span>
-          </div>
-        </div>
-
-        <!-- Algorithmic Decision Scores -->
-        <div>
-          <div class="modal-section-title">Decision Analytics</div>
+          <div class="credential-code-val" id="result-temp-password">-</div>
           
-          <div class="detail-item">
-            <span class="detail-label">CWI Index:</span>
-            <span class="detail-value" id="det-cwi">-</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">DTI Ratio:</span>
-            <span class="detail-value" id="det-dti">-</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Approved Ceiling:</span>
-            <span class="detail-value" id="det-approved" style="color: var(--color-success);">-</span>
-          </div>
-          <div class="detail-item">
-            <span class="detail-label">Proposed APR:</span>
-            <span class="detail-value" id="det-roi">-</span>
+          <div>
+            <button class="btn btn-secondary" onclick="copyResultCredential()" style="padding: 0.35rem 0.85rem; font-size: 0.8rem;" id="btn-copy-temp-result">
+              📋 Copy Password
+            </button>
           </div>
         </div>
+
+        <button type="button" class="btn btn-primary" onclick="closePinResetModal()" style="width: 100%;">
+          Done
+        </button>
       </div>
 
-      <div style="margin-top: 1.5rem;">
-        <div class="modal-section-title">Loan Request & Purpose</div>
-        <div style="background: rgba(10, 14, 26, 0.4); padding: 1rem; border-radius: 8px; border: 1px solid var(--glass-border);">
-          <div class="detail-item" style="margin-bottom: 0.5rem;">
-            <span class="detail-label">Requested Loan:</span>
-            <span class="detail-value" id="det-requested-amount" style="color: #c084fc;">-</span>
-          </div>
-          <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5;" id="det-purpose">-</p>
-        </div>
-      </div>
-
-      <div style="margin-top: 1.5rem;" id="modal-recommendations-wrapper">
-        <div class="modal-section-title">Matched Qualified Policies</div>
-        <div id="modal-recommendations-list">
-          <p style="color: var(--text-secondary); font-size: 0.875rem;">None</p>
-        </div>
-      </div>
     </div>
   </div>
 
   <script>
-    let token = localStorage.getItem('token');
-    let username = localStorage.getItem('username');
+    const token = localStorage.getItem('token');
+    const username = localStorage.getItem('username');
+    const role = localStorage.getItem('role');
+    const isSuperior = role === 'superior';
 
+    let allClients = [];
+    let allAdmins = [];
+    let allRequests = [];
+    let latestGeneratedPassword = '';
+
+    function toggleSidebarMenu() {
+      const sidebar = document.getElementById('dashboard-sidebar');
+      sidebar.classList.toggle('mobile-open');
+    }
+
+    // Safety Auth Check
     window.addEventListener('DOMContentLoaded', () => {
-      if (!token || localStorage.getItem('role') !== 'admin') {
+      if (!token || (role !== 'admin' && role !== 'superior')) {
         localStorage.clear();
         window.location.href = '/login.html?role=admin';
         return;
       }
       
-      document.getElementById('user-display-name').textContent = username || 'Admin';
-      document.getElementById('avatar-char').textContent = (username || 'A').charAt(0).toUpperCase();
-
+      setupRolePresentation();
       fetchClients();
+      fetchAdministrators();
+      if (isSuperior) {
+        fetchResetRequests();
+        fetchAuditLogs();
+      }
     });
+
+    function setupRolePresentation() {
+      const avatarEl = document.getElementById('avatar-char');
+      const nameEl = document.getElementById('user-display-name');
+      const roleLabelEl = document.getElementById('user-role-label');
+      const roleStatusBadge = document.getElementById('role-status-badge');
+      const createBtnContainer = document.getElementById('create-admin-btn-container');
+      const adminNoticeBanner = document.getElementById('admin-notice-banner');
+      const requestsNavBtn = document.getElementById('btn-sect-requests');
+      const auditNavBtn = document.getElementById('btn-sect-audit');
+
+      nameEl.textContent = username || (isSuperior ? 'Superior' : 'Admin');
+
+      if (isSuperior) {
+        avatarEl.textContent = '👑';
+        avatarEl.style.background = 'linear-gradient(135deg, #f59e0b, #ec4899)';
+        roleLabelEl.textContent = 'Superior Administrator';
+        roleLabelEl.style.color = '#fbbf24';
+
+        roleStatusBadge.innerHTML = `
+          <div class="badge-superior-tag">
+            <span>⚡</span> Superior Role: Full Read + Write + PIN Reset
+          </div>
+        `;
+
+        createBtnContainer.innerHTML = `
+          <button class="btn btn-primary" onclick="openCreateAdminModal()" style="font-size: 0.875rem;">
+            <span>+ Add Administrator</span>
+          </button>
+        `;
+
+        requestsNavBtn.style.display = 'flex';
+        auditNavBtn.style.display = 'flex';
+        adminNoticeBanner.innerHTML = '';
+      } else {
+        avatarEl.textContent = (username || 'A').charAt(0).toUpperCase();
+        avatarEl.style.background = 'linear-gradient(135deg, var(--accent-blue), var(--accent-purple))';
+        roleLabelEl.textContent = 'Administrator (Auditor)';
+        roleLabelEl.style.color = 'var(--text-muted)';
+
+        roleStatusBadge.innerHTML = `
+          <div class="badge-admin-tag">
+            <span>👁️</span> Auditor Role: Read-Only Access
+          </div>
+        `;
+
+        createBtnContainer.innerHTML = '';
+        requestsNavBtn.style.display = 'none';
+        auditNavBtn.style.display = 'none';
+
+        adminNoticeBanner.innerHTML = `
+          <div style="padding: 0.75rem 1rem; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: var(--border-radius-sm); font-size: 0.825rem; color: #60a5fa; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span>ℹ️</span> <strong>Auditor Notice:</strong> Administrator creation, modification, and password resets are restricted to Superior Administrators.
+          </div>
+        `;
+      }
+    }
+
+    function switchSection(sectionId) {
+      document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+      document.querySelectorAll('.sidebar-btn').forEach(btn => btn.classList.remove('active'));
+      
+      const targetSec = document.getElementById(`sect-${sectionId}`);
+      if (targetSec) targetSec.classList.add('active');
+
+      const btn = document.getElementById(`btn-sect-${sectionId}`);
+      if (btn) btn.classList.add('active');
+
+      const sidebar = document.getElementById('dashboard-sidebar');
+      if (sidebar.classList.contains('mobile-open')) {
+        sidebar.classList.remove('mobile-open');
+      }
+
+      if (sectionId === 'requests' && isSuperior) fetchResetRequests();
+      if (sectionId === 'audit' && isSuperior) fetchAuditLogs();
+    }
 
     function handleLogout() {
       localStorage.clear();
-      window.location.href = '/login.html';
+      window.location.href = '/login.html?role=admin';
     }
+
+    function showGlobalAlert(type, message) {
+      const container = document.getElementById('global-alert');
+      container.innerHTML = `
+        <div class="alert alert-${type}">
+          <span>${type === 'success' ? '✅' : '❌'}</span>
+          <div>${message}</div>
+        </div>
+      `;
+      setTimeout(() => { container.innerHTML = ''; }, 6000);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ==========================================
+    // CLIENTS DIRECTORY
+    // ==========================================
 
     async function fetchClients() {
       try {
@@ -304,28 +687,65 @@
           headers: { 'Authorization': `Bearer ${token}` }
         });
         
-        if (!response.ok) throw new Error('Failed to fetch clients records.');
+        if (!response.ok) throw new Error('Failed to fetch client records.');
         
-        const clients = await response.json();
-        renderClients(clients);
+        allClients = await response.json();
+        renderClients(allClients);
       } catch (err) {
         showGlobalAlert('danger', err.message);
       }
     }
 
+    function filterClientTable() {
+      const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
+      const riskFilter = document.getElementById('risk-filter').value;
+
+      const filtered = allClients.filter(client => {
+        const fullName = (client.full_name || '').toLowerCase();
+        const clientUser = (client.username || '').toLowerCase();
+        const matchesSearch = fullName.includes(searchTerm) || clientUser.includes(searchTerm);
+
+        let matchesRisk = true;
+        if (riskFilter !== 'all') {
+          matchesRisk = client.risk_score === riskFilter;
+        }
+
+        return matchesSearch && matchesRisk;
+      });
+
+      renderClients(filtered);
+    }
+
     function renderClients(clients) {
       const tableContainer = document.getElementById('clients-table-container');
       
-      // Calculate Stats
-      let totalClients = 0;
+      let totalClients = allClients.length;
       let totalCreditScoreSum = 0;
       let totalRequestedAmount = 0;
       let totalCwiSum = 0;
       let countedProfiles = 0;
 
+      allClients.forEach(c => {
+        if (c.full_name !== null) {
+          countedProfiles++;
+          totalCreditScoreSum += c.credit_score;
+          totalRequestedAmount += (c.requested_loan_amount || 0);
+          totalCwiSum += (c.cwi || (c.risk_score === 'Low' ? 0.82 : c.risk_score === 'Medium' ? 0.61 : 0.38));
+        }
+      });
+
+      const avgCredit = countedProfiles > 0 ? Math.round(totalCreditScoreSum / countedProfiles) : '-';
+      const avgCwi = countedProfiles > 0 ? (totalCwiSum / countedProfiles).toFixed(2) : '0.00';
+      updateStats(totalClients, avgCredit, totalRequestedAmount, avgCwi);
+
       if (!clients || clients.length === 0) {
-        tableContainer.innerHTML = '<p style="color: var(--text-secondary);">No client records found.</p>';
-        updateStats(0, 0, 0, 0);
+        tableContainer.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">👥</div>
+            <div class="empty-title">No Clients Found</div>
+            <div class="empty-desc">No client records match your current search or filter query.</div>
+          </div>
+        `;
         return;
       }
 
@@ -335,9 +755,9 @@
             <tr>
               <th>Client Name</th>
               <th>Username</th>
-              <th>Credit Score</th>
+              <th>Score</th>
               <th>DTI</th>
-              <th>Requested Loan</th>
+              <th>Requested</th>
               <th>CWI</th>
               <th>Risk Tier</th>
               <th>Action</th>
@@ -347,53 +767,55 @@
       `;
 
       clients.forEach(client => {
-        totalClients++;
-        
         const hasProfile = client.full_name !== null;
         let creditScore = '-';
         let dti = '-';
         let requested = '-';
-        let risk = '-';
         let cwiText = '-';
-        let riskBadge = '';
+        let riskBadge = '<span style="color: var(--text-muted); font-size: 0.8rem;">No Profile</span>';
 
         if (hasProfile) {
-          countedProfiles++;
           creditScore = client.credit_score;
-          totalCreditScoreSum += client.credit_score;
-          
           dti = `${(client.debt_to_income_ratio * 100).toFixed(1)}%`;
           requested = `$${client.requested_loan_amount.toLocaleString()}`;
-          totalRequestedAmount += client.requested_loan_amount;
           
-          // Use database CWI if available, fall back to estimated
-          const cwiVal = (client.cwi !== null && client.cwi !== undefined) ? client.cwi : (client.risk_score === 'Low' ? 0.82 : client.risk_score === 'Medium' ? 0.61 : 0.38);
-          cwiText = (client.cwi !== null && client.cwi !== undefined) ? client.cwi.toFixed(2) : (client.approved_amount !== null ? (client.risk_score === 'Low' ? '0.78' : client.risk_score === 'Medium' ? '0.62' : '0.41') : '-');
-          totalCwiSum += cwiVal;
+          const cwiVal = (client.cwi !== null && client.cwi !== undefined) 
+            ? client.cwi.toFixed(2) 
+            : (client.risk_score === 'Low' ? '0.82' : client.risk_score === 'Medium' ? '0.61' : '0.38');
+          cwiText = cwiVal;
           
           if (client.risk_score === 'Low') {
-            riskBadge = `<span class="badge badge-low">Low</span>`;
+            riskBadge = `<span class="badge badge-low">Low Risk</span>`;
           } else if (client.risk_score === 'Medium') {
-            riskBadge = `<span class="badge badge-medium">Medium</span>`;
+            riskBadge = `<span class="badge badge-medium">Medium Risk</span>`;
           } else {
-            riskBadge = `<span class="badge badge-high">High</span>`;
+            riskBadge = `<span class="badge badge-high">High Risk</span>`;
           }
         }
 
         html += `
           <tr>
-            <td><strong>${client.full_name || 'Incomplete Profile'}</strong></td>
+            <td><strong>${client.full_name || 'Incomplete Setup'}</strong></td>
             <td><code>${client.username}</code></td>
             <td>${creditScore}</td>
             <td>${dti}</td>
             <td style="color: #c084fc; font-weight: 600;">${requested}</td>
             <td>${cwiText}</td>
-            <td>${riskBadge || '-'}</td>
+            <td>${riskBadge}</td>
             <td>
-              ${hasProfile 
-                ? `<button class="view-details-btn" onclick="openDetails(${client.user_id})">View Analysis</button>` 
-                : '<span style="font-size: 0.8125rem; color: var(--text-secondary);">No Data</span>'
-              }
+              <div class="table-actions-cell">
+                <button class="view-details-btn" onclick="openDetails('${client.user_id}')">
+                  ${isSuperior ? '✏️ View & Edit' : '👁️ View Audit'}
+                </button>
+                ${isSuperior ? `
+                  <button class="view-details-btn" style="background: rgba(234, 179, 8, 0.12); border-color: rgba(234, 179, 8, 0.3); color: #fbbf24;" onclick="openPinResetModal('${client.user_id}', '${client.username}')">
+                    🔑 Reset
+                  </button>
+                  <button class="btn btn-danger-outline" style="padding: 0.35rem 0.65rem; font-size: 0.775rem;" onclick="deleteClient('${client.user_id}', '${client.username}')">
+                    🗑️
+                  </button>
+                ` : ''}
+              </div>
             </td>
           </tr>
         `;
@@ -401,11 +823,6 @@
 
       html += '</tbody></table>';
       tableContainer.innerHTML = html;
-
-      // Update Top Metrics cards
-      const avgCredit = countedProfiles > 0 ? Math.round(totalCreditScoreSum / countedProfiles) : '-';
-      const avgCwi = countedProfiles > 0 ? (totalCwiSum / countedProfiles).toFixed(2) : '0.00';
-      updateStats(totalClients, avgCredit, totalRequestedAmount, avgCwi);
     }
 
     function updateStats(total, avgCredit, totalRequested, avgCwi) {
@@ -415,73 +832,154 @@
       document.getElementById('stat-avg-cwi').textContent = avgCwi;
     }
 
-    // API Call: View Detailed analysis inside Modal
     async function openDetails(userId) {
       try {
         const response = await fetch(`/api/admin/clients/${userId}/analysis`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         
-        if (!response.ok) throw new Error('Failed to retrieve client audit detail.');
+        if (!response.ok) throw new Error('Failed to retrieve client audit details.');
         
         const data = await response.json();
         
-        // Populate modal variables
-        document.getElementById('modal-title').textContent = data.profile.full_name;
-        document.getElementById('modal-subtitle').textContent = `Credit Rating Profile for User: ${data.profile.username}`;
-        
-        document.getElementById('det-username').textContent = data.profile.username;
-        document.getElementById('det-credit').textContent = data.profile.credit_score;
-        document.getElementById('det-income').textContent = `$${data.profile.annual_income.toLocaleString()}/yr`;
-        document.getElementById('det-expenses').textContent = `$${data.profile.monthly_expenses.toLocaleString()}/mo`;
+        document.getElementById('modal-title').textContent = data.profile.full_name || 'Client Assessment';
+        document.getElementById('modal-subtitle').textContent = `User Reference: @${data.profile.username}`;
+        document.getElementById('edit-client-id').value = data.profile.user_id;
+
+        document.getElementById('edit-client-name').value = data.profile.full_name || '';
+        document.getElementById('edit-client-credit').value = data.profile.credit_score || '';
+        document.getElementById('edit-client-income').value = data.profile.annual_income || '';
+        document.getElementById('edit-client-expenses').value = data.profile.monthly_expenses || '';
+        document.getElementById('edit-client-loan-amount').value = data.profile.requested_loan_amount || '';
+        document.getElementById('edit-client-purpose').value = data.profile.loan_purpose || '';
+
+        const inputs = [
+          'edit-client-name', 'edit-client-credit', 'edit-client-income', 
+          'edit-client-expenses', 'edit-client-loan-amount', 'edit-client-purpose'
+        ];
+        inputs.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.disabled = !isSuperior;
+        });
+
+        const saveBtn = document.getElementById('btn-save-client-changes');
+        if (saveBtn) {
+          saveBtn.style.display = isSuperior ? 'inline-flex' : 'none';
+        }
+
+        const resetSlot = document.getElementById('modal-superior-reset-btn-slot');
+        if (isSuperior) {
+          resetSlot.innerHTML = `
+            <button type="button" class="btn btn-secondary" style="color: #fbbf24; border-color: rgba(234, 179, 8, 0.3); font-size: 0.8125rem;" onclick="closeModal(); openPinResetModal('${data.profile.user_id}', '${data.profile.username}');">
+              🔑 Reset Password (PIN)
+            </button>
+          `;
+        } else {
+          resetSlot.innerHTML = '';
+        }
         
         if (data.analysis) {
-          // Use database CWI if available, fall back to estimated
           let cwiScoreVal = (data.analysis.cwi !== null && data.analysis.cwi !== undefined) 
             ? data.analysis.cwi.toFixed(2) 
             : (data.analysis.risk_score === 'Low' ? '0.84' : data.analysis.risk_score === 'Medium' ? '0.63' : '0.38');
+            
           document.getElementById('det-cwi').textContent = cwiScoreVal;
           document.getElementById('det-dti').textContent = `${(data.analysis.debt_to_income_ratio * 100).toFixed(1)}%`;
           document.getElementById('det-approved').textContent = data.analysis.approved_amount > 0 
             ? `$${data.analysis.approved_amount.toLocaleString()}` 
-            : 'Rejected';
+            : 'Declined';
           document.getElementById('det-roi').textContent = `${data.analysis.interest_rate_offered}% APR`;
           
-          document.getElementById('det-requested-amount').textContent = `$${data.profile.requested_loan_amount.toLocaleString()}`;
-          document.getElementById('det-purpose').textContent = data.profile.loan_purpose 
-            ? `Purpose: "${data.profile.loan_purpose}"` 
-            : 'Purpose: Not Specified';
-            
-          // Match qualified policies list
           const listEl = document.getElementById('modal-recommendations-list');
           if (data.analysis.recommendations && data.analysis.recommendations.length > 0) {
             let listHtml = '<ul style="margin-top: 0.5rem; padding-left: 1.25rem; font-size: 0.875rem; color: var(--text-secondary);">';
             data.analysis.recommendations.forEach(rec => {
               listHtml += `
-                <li style="margin-bottom: 0.5rem;">
-                  <strong style="color: var(--text-primary);">${rec.bankName}</strong> offered interest rate: 
-                  <span style="color: var(--color-success); font-weight: 600;">${rec.offeredRate}% APR</span> 
-                  (Term: ${rec.termMonths} months)
+                <li style="margin-bottom: 0.45rem;">
+                  <strong style="color: var(--text-primary);">${rec.bankName}</strong>: 
+                  <span style="color: var(--color-success); font-weight: 700;">${rec.offeredRate}% APR</span> 
+                  (${rec.termMonths} mo. term | Max: $${rec.maxAmount.toLocaleString()})
                 </li>
               `;
             });
             listHtml += '</ul>';
             listEl.innerHTML = listHtml;
           } else {
-            document.getElementById('modal-recommendations-list').innerHTML = '<p style="color: var(--text-secondary); font-size: 0.875rem;">No pre-qualified policies match this client profile.</p>';
+            document.getElementById('modal-recommendations-list').innerHTML = '<p style="color: var(--text-muted); font-size: 0.875rem;">No pre-qualified policies match this client profile.</p>';
           }
         } else {
           document.getElementById('det-cwi').textContent = '-';
           document.getElementById('det-dti').textContent = '-';
-          document.getElementById('det-approved').textContent = 'Pending Analysis';
+          document.getElementById('det-approved').textContent = 'Pending';
           document.getElementById('det-roi').textContent = '-';
-          document.getElementById('det-requested-amount').textContent = `$${data.profile.requested_loan_amount.toLocaleString()}`;
-          document.getElementById('det-purpose').textContent = data.profile.loan_purpose || 'Not Specified';
-          document.getElementById('modal-recommendations-list').innerHTML = '<p style="color: var(--text-secondary); font-size: 0.875rem;">Analysis calculations pending.</p>';
+          document.getElementById('modal-recommendations-list').innerHTML = '<p style="color: var(--text-muted); font-size: 0.875rem;">Calculations pending.</p>';
         }
 
-        // Open modal window
         document.getElementById('details-modal').classList.add('open');
+      } catch (err) {
+        showGlobalAlert('danger', err.message);
+      }
+    }
+
+    async function handleSaveClientProfile(event) {
+      event.preventDefault();
+      if (!isSuperior) return;
+
+      const userId = document.getElementById('edit-client-id').value;
+      const saveBtn = document.getElementById('btn-save-client-changes');
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<span class="spinner"></span> Saving...';
+
+      const payload = {
+        full_name: document.getElementById('edit-client-name').value.trim(),
+        credit_score: parseInt(document.getElementById('edit-client-credit').value, 10),
+        annual_income: parseFloat(document.getElementById('edit-client-income').value),
+        monthly_expenses: parseFloat(document.getElementById('edit-client-expenses').value),
+        requested_loan_amount: parseFloat(document.getElementById('edit-client-loan-amount').value),
+        loan_purpose: document.getElementById('edit-client-purpose').value.trim()
+      };
+
+      try {
+        const response = await fetch(`/api/admin/clients/${userId}/profile`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error);
+
+        showGlobalAlert('success', 'Client profile updated & AI risk analysis recalculated successfully!');
+        closeModal();
+        await fetchClients();
+      } catch (err) {
+        showGlobalAlert('danger', err.message);
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<span>💾 Save & Recalculate AI Score</span>';
+      }
+    }
+
+    async function deleteClient(userId, clientUsername) {
+      if (!isSuperior) return;
+      if (!confirm(`Are you sure you want to completely delete client account "@${clientUsername}"? This action cannot be undone.`)) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/admin/clients/${userId}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error);
+
+        showGlobalAlert('success', data.message);
+        await fetchClients();
       } catch (err) {
         showGlobalAlert('danger', err.message);
       }
@@ -491,19 +989,490 @@
       document.getElementById('details-modal').classList.remove('open');
     }
 
-    // Helper alerts
-    function showGlobalAlert(type, message) {
-      const container = document.getElementById('global-alert');
-      container.innerHTML = `
-        <div class="alert alert-${type}">
-          ${type === 'success' ? '✅' : '❌'} ${message}
-        </div>
+    // ==========================================
+    // ADMINISTRATORS DIRECTORY
+    // ==========================================
+
+    async function fetchAdministrators() {
+      try {
+        const response = await fetch('/api/admin/administrators', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) throw new Error('Failed to retrieve administrators.');
+        allAdmins = await response.json();
+        renderAdministrators(allAdmins);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderAdministrators(admins) {
+      const container = document.getElementById('admins-table-container');
+
+      if (!admins || admins.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🛡️</div>
+            <div class="empty-title">No Administrators Found</div>
+          </div>
+        `;
+        return;
+      }
+
+      let html = `
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>System Role</th>
+              <th>Created Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
       `;
-      setTimeout(() => {
-        container.innerHTML = '';
-      }, 5000);
+
+      admins.forEach(adm => {
+        const isSelf = adm.username === username;
+        const isAdmSuperior = adm.role === 'superior';
+        const roleBadge = isAdmSuperior 
+          ? `<span class="badge-superior-tag">👑 Superior</span>` 
+          : `<span class="badge-admin-tag">🛡️ Administrator</span>`;
+
+        html += `
+          <tr>
+            <td><code>#${adm.id}</code></td>
+            <td><strong>${adm.username}</strong> ${isSelf ? '<span style="color: var(--color-success); font-size: 0.75rem;">(You)</span>' : ''}</td>
+            <td>${roleBadge}</td>
+            <td style="color: var(--text-muted); font-size: 0.85rem;">${adm.created_at || '-'}</td>
+            <td>
+              <div class="table-actions-cell">
+                ${isSuperior ? `
+                  <button class="view-details-btn" onclick="openEditAdminModal('${adm.id}', '${adm.username}')">
+                    ✏️ Edit
+                  </button>
+                  <button class="view-details-btn" style="background: rgba(234, 179, 8, 0.12); border-color: rgba(234, 179, 8, 0.3); color: #fbbf24;" onclick="openPinResetModal('${adm.id}', '${adm.username}')">
+                    🔑 Reset
+                  </button>
+                  ${(!isSelf && !isAdmSuperior) ? `
+                    <button class="btn btn-danger-outline" style="padding: 0.35rem 0.65rem; font-size: 0.775rem;" onclick="deleteAdminAccount('${adm.id}', '${adm.username}')">
+                      🗑️
+                    </button>
+                  ` : ''}
+                ` : `
+                  <span style="font-size: 0.8rem; color: var(--text-muted);">Read-Only</span>
+                `}
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    function openCreateAdminModal() {
+      if (!isSuperior) return;
+      document.getElementById('admin-modal-title').textContent = 'Add New Administrator';
+      document.getElementById('admin-modal-subtitle').textContent = 'Provision auditor login credentials';
+      document.getElementById('admin-modal-id').value = '';
+      document.getElementById('admin-modal-username').value = '';
+      document.getElementById('admin-modal-password').value = '';
+      document.getElementById('admin-modal-password').required = true;
+      document.getElementById('admin-password-hint').textContent = 'Min. 6 characters (Required)';
+      document.getElementById('btn-save-admin-text').textContent = 'Create Administrator';
+      document.getElementById('admin-modal').classList.add('open');
+    }
+
+    function openEditAdminModal(id, currentUsername) {
+      if (!isSuperior) return;
+      document.getElementById('admin-modal-title').textContent = 'Edit Administrator';
+      document.getElementById('admin-modal-subtitle').textContent = `Update credentials for @${currentUsername}`;
+      document.getElementById('admin-modal-id').value = id;
+      document.getElementById('admin-modal-username').value = currentUsername;
+      document.getElementById('admin-modal-password').value = '';
+      document.getElementById('admin-modal-password').required = false;
+      document.getElementById('admin-password-hint').textContent = 'Leave blank to keep existing password';
+      document.getElementById('btn-save-admin-text').textContent = 'Update Account';
+      document.getElementById('admin-modal').classList.add('open');
+    }
+
+    function closeAdminModal() {
+      document.getElementById('admin-modal').classList.remove('open');
+    }
+
+    async function handleAdminFormSubmit(event) {
+      event.preventDefault();
+      if (!isSuperior) return;
+
+      const adminId = document.getElementById('admin-modal-id').value;
+      const usernameVal = document.getElementById('admin-modal-username').value.trim();
+      const passwordVal = document.getElementById('admin-modal-password').value;
+      const saveBtn = document.getElementById('btn-save-admin');
+      const btnText = document.getElementById('btn-save-admin-text');
+
+      saveBtn.disabled = true;
+      btnText.textContent = 'Saving...';
+
+      const payload = { username: usernameVal };
+      if (passwordVal) payload.password = passwordVal;
+
+      try {
+        let response;
+        if (adminId) {
+          response = await fetch(`/api/admin/administrators/${adminId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+          });
+        } else {
+          response = await fetch('/api/admin/administrators', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+          });
+        }
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error);
+
+        showGlobalAlert('success', data.message);
+        closeAdminModal();
+        await fetchAdministrators();
+      } catch (err) {
+        showGlobalAlert('danger', err.message);
+      } finally {
+        saveBtn.disabled = false;
+        btnText.textContent = adminId ? 'Update Account' : 'Create Administrator';
+      }
+    }
+
+    async function deleteAdminAccount(id, adminName) {
+      if (!isSuperior) return;
+      if (!confirm(`Are you sure you want to delete administrator "${adminName}"?`)) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/admin/administrators/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error);
+
+        showGlobalAlert('success', data.message);
+        await fetchAdministrators();
+      } catch (err) {
+        showGlobalAlert('danger', err.message);
+      }
+    }
+
+    // ==========================================
+    // PIN-GATED PASSWORD RESET (SUPERIOR ONLY)
+    // ==========================================
+
+    function openPinResetModal(targetUserId, targetUsername, requestId = null) {
+      if (!isSuperior) return;
+
+      document.getElementById('pin-target-user-id').value = targetUserId;
+      document.getElementById('pin-request-id').value = requestId || '';
+      document.getElementById('pin-target-username-display').textContent = `@${targetUsername}`;
+      document.getElementById('superior-pin-input').value = '';
+      document.getElementById('custom-new-password').value = '';
+      document.getElementById('pin-modal-alert').innerHTML = '';
+
+      document.getElementById('pin-reset-form').style.display = 'block';
+      document.getElementById('pin-reset-success-box').style.display = 'none';
+
+      document.getElementById('pin-reset-modal').classList.add('open');
+      setTimeout(() => { document.getElementById('superior-pin-input').focus(); }, 150);
+    }
+
+    function closePinResetModal() {
+      document.getElementById('pin-reset-modal').classList.remove('open');
+    }
+
+    async function handleExecutePinReset(event) {
+      event.preventDefault();
+      if (!isSuperior) return;
+
+      const targetUserId = document.getElementById('pin-target-user-id').value;
+      const requestId = document.getElementById('pin-request-id').value;
+      const pinVal = document.getElementById('superior-pin-input').value;
+      const customPwdVal = document.getElementById('custom-new-password').value;
+      const execBtn = document.getElementById('btn-execute-pin-reset');
+      const btnText = document.getElementById('btn-execute-pin-text');
+      const alertContainer = document.getElementById('pin-modal-alert');
+
+      execBtn.disabled = true;
+      btnText.innerHTML = '<span class="spinner"></span> Verifying PIN...';
+      alertContainer.innerHTML = '';
+
+      const payload = {
+        targetUserId: parseInt(targetUserId, 10),
+        pin: pinVal,
+        customPassword: customPwdVal || undefined,
+        requestId: requestId ? parseInt(requestId, 10) : undefined
+      };
+
+      try {
+        const response = await fetch('/api/admin/reset-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to authorize password reset.');
+        }
+
+        latestGeneratedPassword = data.tempPassword;
+        document.getElementById('result-temp-password').textContent = data.tempPassword;
+
+        document.getElementById('pin-reset-form').style.display = 'none';
+        document.getElementById('pin-reset-success-box').style.display = 'block';
+
+        showGlobalAlert('success', `Password for @${data.targetUsername} has been reset successfully.`);
+        fetchResetRequests();
+        fetchAuditLogs();
+      } catch (err) {
+        alertContainer.innerHTML = `
+          <div class="alert alert-danger">
+            <span>❌</span> ${err.message}
+          </div>
+        `;
+      } finally {
+        execBtn.disabled = false;
+        btnText.textContent = 'Verify PIN & Reset';
+      }
+    }
+
+    function copyResultCredential() {
+      if (!latestGeneratedPassword) return;
+      navigator.clipboard.writeText(latestGeneratedPassword).then(() => {
+        const btn = document.getElementById('btn-copy-temp-result');
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => { btn.textContent = '📋 Copy Password'; }, 2500);
+      });
+    }
+
+    // ==========================================
+    // RESET REQUESTS (SUPERIOR ONLY)
+    // ==========================================
+
+    async function fetchResetRequests() {
+      if (!isSuperior) return;
+      try {
+        const response = await fetch('/api/admin/reset-requests', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) throw new Error('Failed to retrieve reset requests.');
+        allRequests = await response.json();
+        renderResetRequests(allRequests);
+      } catch (err) {
+        console.error('Error fetching requests:', err);
+      }
+    }
+
+    function renderResetRequests(requests) {
+      const container = document.getElementById('requests-table-container');
+      const badgeCount = document.getElementById('pending-requests-count');
+
+      const pendingList = requests.filter(r => r.status === 'pending');
+      if (pendingList.length > 0) {
+        badgeCount.textContent = pendingList.length;
+        badgeCount.style.display = 'inline-block';
+      } else {
+        badgeCount.style.display = 'none';
+      }
+
+      if (!requests || requests.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🔑</div>
+            <div class="empty-title">No Password Reset Requests</div>
+            <div class="empty-desc">When users submit a reset request on the recovery portal, it will appear here for review.</div>
+          </div>
+        `;
+        return;
+      }
+
+      let html = `
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Requested At</th>
+              <th>Status</th>
+              <th>Resolution Info</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      requests.forEach(req => {
+        let statusBadge = `<span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3);">Pending</span>`;
+        if (req.status === 'approved') {
+          statusBadge = `<span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">Approved</span>`;
+        } else if (req.status === 'denied') {
+          statusBadge = `<span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3);">Denied</span>`;
+        }
+
+        let resolutionInfo = '<span style="color: var(--text-muted); font-size: 0.8rem;">Awaiting Review</span>';
+        if (req.status === 'approved') {
+          resolutionInfo = `<span style="font-size: 0.775rem; color: #34d399;">Authorized by @${req.resolved_by_username || 'superior'}<br>(${req.resolved_at || ''})</span>`;
+        } else if (req.status === 'denied') {
+          resolutionInfo = `<span style="font-size: 0.775rem; color: #f87171;">${req.notes || 'Denied'}<br>(${req.resolved_at || ''})</span>`;
+        }
+
+        html += `
+          <tr>
+            <td><code>#${req.id}</code></td>
+            <td><strong>@${req.username}</strong></td>
+            <td><span class="badge badge-${req.role}">${req.role}</span></td>
+            <td style="font-size: 0.825rem; color: var(--text-muted);">${req.created_at || '-'}</td>
+            <td>${statusBadge}</td>
+            <td>${resolutionInfo}</td>
+            <td>
+              <div class="table-actions-cell">
+                ${req.status === 'pending' ? `
+                  <button class="view-details-btn" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3);" onclick="openPinResetModal('${req.user_id}', '${req.username}', '${req.id}')">
+                    ✅ Approve (PIN)
+                  </button>
+                  <button class="btn btn-danger-outline" style="padding: 0.35rem 0.65rem; font-size: 0.775rem;" onclick="denyResetRequest('${req.id}', '${req.username}')">
+                    ❌ Deny
+                  </button>
+                ` : `
+                  <span style="font-size: 0.775rem; color: var(--text-muted);">Completed</span>
+                `}
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    async function denyResetRequest(requestId, targetUser) {
+      if (!isSuperior) return;
+      const reason = prompt(`Reason for denying password reset for @${targetUser} (Optional):`);
+      if (reason === null) return; // User cancelled prompt
+
+      try {
+        const response = await fetch(`/api/admin/reset-requests/${requestId}/deny`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ reason: reason.trim() })
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error);
+
+        showGlobalAlert('success', data.message);
+        await fetchResetRequests();
+        await fetchAuditLogs();
+      } catch (err) {
+        showGlobalAlert('danger', err.message);
+      }
+    }
+
+    // ==========================================
+    // SECURITY AUDIT LOGS (SUPERIOR ONLY)
+    // ==========================================
+
+    async function fetchAuditLogs() {
+      if (!isSuperior) return;
+      try {
+        const response = await fetch('/api/admin/audit-logs', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) throw new Error('Failed to retrieve audit logs.');
+        const logs = await response.json();
+        renderAuditLogs(logs);
+      } catch (err) {
+        console.error('Error fetching audit logs:', err);
+      }
+    }
+
+    function renderAuditLogs(logs) {
+      const container = document.getElementById('audit-table-container');
+
+      if (!logs || logs.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">📜</div>
+            <div class="empty-title">No Audit Logs Found</div>
+          </div>
+        `;
+        return;
+      }
+
+      let html = `
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Actor</th>
+              <th>Action</th>
+              <th>Target</th>
+              <th>Status</th>
+              <th>Details</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      logs.forEach(log => {
+        const isSuccess = log.status === 'SUCCESS';
+        const statusBadge = isSuccess 
+          ? `<span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">SUCCESS</span>`
+          : log.status === 'PENDING'
+          ? `<span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3);">PENDING</span>`
+          : `<span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3);">FAILED</span>`;
+
+        html += `
+          <tr>
+            <td><code>#${log.id}</code></td>
+            <td><strong>@${log.actor_username || 'system'}</strong> <span style="font-size: 0.725rem; color: var(--text-muted);">(${log.actor_role || '-'})</span></td>
+            <td><code>${log.action}</code></td>
+            <td><strong>${log.target_username ? '@' + log.target_username : '-'}</strong></td>
+            <td>${statusBadge}</td>
+            <td style="font-size: 0.825rem; color: var(--text-secondary); max-width: 250px;">${log.details || '-'}</td>
+            <td style="font-size: 0.8rem; color: var(--text-muted);">${log.created_at || '-'}</td>
+          </tr>
+        `;
+      });
+
+      html += '</tbody></table>';
+      container.innerHTML = html;
     }
   </script>
-
 </body>
 </html>

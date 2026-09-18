@@ -3,96 +3,149 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Finewise AI - Advanced Credit Intelligence & Risk Scoring</title>
+  <title>Finewise AI - Intelligent Credit Risk Analytics & Lending Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
+    /* Home specific hero & layout styling */
     .hero {
-      padding: 6rem 0 4rem;
+      padding: 6.5rem 0 4rem;
       text-align: center;
       position: relative;
     }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #c084fc;
+      margin-bottom: 1.75rem;
+      animation: pulseGlow 3s infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.2); }
+      50% { box-shadow: 0 0 15px 2px rgba(139, 92, 246, 0.3); }
+    }
     
     .hero-title {
-      font-size: 3.5rem;
+      font-size: clamp(2.25rem, 5vw, 3.75rem);
       font-weight: 800;
       line-height: 1.15;
       margin-bottom: 1.5rem;
-      background: linear-gradient(135deg, #ffffff 30%, #a78bfa 70%, #ec4899 100%);
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #ffffff 20%, #c4b5fd 60%, #f472b6 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
     }
     
     .hero-subtitle {
-      font-size: 1.25rem;
+      font-size: clamp(1rem, 2vw, 1.25rem);
       color: var(--text-secondary);
-      max-width: 600px;
+      max-width: 680px;
       margin: 0 auto 2.5rem;
+      line-height: 1.6;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      justify-content: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
     }
     
     .features-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      margin: 4rem 0;
+      gap: 1.75rem;
+      margin: 4.5rem 0;
     }
     
     .feature-card {
       text-align: left;
+      position: relative;
     }
     
-    .feature-icon {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      color: #c084fc;
+    .feature-icon-wrapper {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
     }
     
     .feature-card h3 {
       font-size: 1.25rem;
-      margin-bottom: 0.75rem;
-      font-weight: 600;
+      margin-bottom: 0.65rem;
+      font-weight: 700;
+      color: var(--text-primary);
     }
     
     .feature-card p {
       color: var(--text-secondary);
-      font-size: 0.9375rem;
+      font-size: 0.925rem;
+      line-height: 1.6;
     }
     
     .algorithm-preview {
-      margin-top: 4rem;
-      background: rgba(139, 92, 246, 0.05);
-      border: 1px solid rgba(139, 92, 246, 0.15);
+      margin-top: 3.5rem;
+      background: linear-gradient(180deg, rgba(13, 19, 34, 0.85) 0%, rgba(10, 14, 26, 0.95) 100%);
+      border: 1px solid rgba(139, 92, 246, 0.2);
       border-radius: var(--border-radius);
-      padding: 3rem;
+      padding: 3rem 2rem;
     }
     
     .algo-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 800;
+      margin-bottom: 0.75rem;
       text-align: center;
+      letter-spacing: -0.02em;
     }
     
     .algo-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2.25rem;
     }
     
     .algo-factor {
-      background: rgba(10, 14, 26, 0.5);
-      padding: 1.25rem;
-      border-radius: 8px;
+      background: rgba(7, 10, 19, 0.65);
+      padding: 1.4rem;
+      border-radius: var(--border-radius-sm);
       text-align: center;
       border: 1px solid var(--glass-border);
+      transition: var(--transition);
+    }
+
+    .algo-factor:hover {
+      border-color: rgba(139, 92, 246, 0.3);
+      transform: translateY(-3px);
     }
     
     .factor-weight {
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       font-weight: 800;
       color: #f472b6;
       margin-bottom: 0.25rem;
+      letter-spacing: -0.02em;
     }
     
     .factor-name {
@@ -100,17 +153,23 @@
       font-weight: 600;
       color: var(--text-primary);
     }
+
+    .factor-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Navigation -->
+  <!-- Sticky Navigation Bar -->
   <nav class="navbar">
     <a href="/" class="logo">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M2 17L12 22L22 17" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M2 12L12 17L22 12" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="url(#logoGrad)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2 17L12 22L22 17" stroke="url(#logoGrad)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2 12L12 17L22 12" stroke="url(#logoGrad)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
         <defs>
           <linearGradient id="logoGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
             <stop stop-color="#8B5CF6"/>
@@ -120,78 +179,168 @@
       </svg>
       Finewise AI
     </a>
+
     <div class="nav-links">
-      <a href="/login.html" class="nav-link">Sign In / Register</a>
-      <a href="/login.html" class="btn btn-primary">Launch Dashboard</a>
+      <a href="/" class="nav-link active">Home</a>
+      <a href="/login.html?role=client" class="nav-link">Client Portal</a>
+      <a href="/login.html?role=admin" class="nav-link">Admin Access</a>
+      <a href="/login.html?role=client" class="btn btn-primary" style="padding: 0.55rem 1.25rem; font-size: 0.875rem;">Launch App</a>
     </div>
+
+    <!-- Mobile Menu Toggle Button -->
+    <button class="hamburger-btn" onclick="toggleMobileNav()" aria-label="Toggle Menu">
+      ☰
+    </button>
   </nav>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-menu-drawer" id="mobile-menu">
+    <a href="/" class="nav-link active">Home</a>
+    <a href="/login.html?role=client" class="nav-link">Client Portal</a>
+    <a href="/login.html?role=admin" class="nav-link">Admin Access</a>
+    <a href="/login.html?role=client" class="btn btn-primary" style="margin-top: 0.5rem;">Launch Application</a>
+  </div>
 
   <div class="container">
     <!-- Hero Section -->
     <header class="hero">
-      <h1 class="hero-title">Deep Credit Risk Intelligence</h1>
-      <p class="hero-subtitle">Evaluate risk vectors, determine loan approval ceilings, and connect financial sources using our unified Multi-Factor Creditworthiness Index (MF-CWI) mathematical algorithm.</p>
-      <div style="display: flex; justify-content: center; gap: 1rem;">
-        <a href="/login.html?role=client" class="btn btn-primary">Client Portal</a>
-        <a href="/login.html?role=admin" class="btn btn-secondary">Admin Access</a>
+      <div class="hero-badge">
+        <span>✨</span> Next-Generation Credit Intelligence • Soft Inquiry (No Score Impact)
+      </div>
+      <h1 class="hero-title">Multi-Vector Credit Analytics & Intelligent Risk Scoring</h1>
+      <p class="hero-subtitle">
+        Evaluate multidimensional risk profiles, determine real-time loan approval ceilings, and connect financial accounts powered by the proprietary Multi-Factor Creditworthiness Index (MF-CWI) algorithm.
+      </p>
+
+      <!-- Who this is for / Eligibility Overview -->
+      <div class="glass-card" style="max-width: 680px; margin: 0 auto 2.25rem; padding: 1.25rem 1.5rem; text-align: left; background: rgba(13, 19, 34, 0.75); border: 1px solid rgba(139, 92, 246, 0.25);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+          <span style="font-size: 0.825rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #c084fc;">
+            📋 Basic Eligibility Overview
+          </span>
+          <span style="font-size: 0.725rem; color: #34d399; font-weight: 600; background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.25); padding: 0.15rem 0.55rem; border-radius: 9999px;">
+            🔒 Soft Inquiry • Zero Score Impact
+          </span>
+        </div>
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.75rem; line-height: 1.5;">
+          Finewise AI pre-qualifies applicants with risk-optimized loan ceilings based on standard baseline criteria:
+        </p>
+        <ul style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem; list-style: none; padding: 0; margin: 0; font-size: 0.825rem; color: var(--text-primary);">
+          <li style="display: flex; align-items: center; gap: 0.45rem;">
+            <span style="color: #34d399; font-weight: bold;">✓</span> Verifiable steady income stream
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.45rem;">
+            <span style="color: #34d399; font-weight: bold;">✓</span> No active open bankruptcies
+          </li>
+          <li style="display: flex; align-items: center; gap: 0.45rem;">
+            <span style="color: #34d399; font-weight: bold;">✓</span> Min. 18+ yrs & US residency <span style="font-size: 0.725rem; color: var(--text-muted);">(TBD by partner)</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="hero-cta-group">
+        <a href="/login.html?role=client" class="btn btn-primary">
+          <span>🚀</span> Get Started as Client
+        </a>
+        <a href="/login.html?role=admin" class="btn btn-secondary">
+          <span>🛡️</span> Administrator Access
+        </a>
       </div>
     </header>
 
-    <!-- Features -->
+    <!-- Features Section -->
     <section class="features-grid">
       <div class="glass-card feature-card">
-        <div class="feature-icon">🛡️</div>
-        <h3>Confidential Safe Vault</h3>
-        <p>Clients securely log details of financial balances and previous obligations. Database-level constraints ensure bank credentials remain invisible to administrators.</p>
+        <div class="feature-icon-wrapper">🛡️</div>
+        <h3>Confidential Data Vault</h3>
+        <p>Clients safely link liquidity balances and debt obligations. Built-in privacy controls ensure sensitive bank account and routing numbers are strictly masked and never visible to internal staff or administrators.</p>
+        <div style="margin-top: 0.75rem; font-size: 0.775rem; color: #60a5fa; display: flex; align-items: center; gap: 0.35rem;">
+          <span>🔒</span> Masked credentials restricted from administrative staff
+        </div>
       </div>
       
       <div class="glass-card feature-card">
-        <div class="feature-icon">⚡</div>
-        <h3>MF-CWI Analytics</h3>
-        <p>A unified mathematical algorithm analyzing five custom weight dimensions including credit ratings, cash buffers, existing debt levels, and ratios in real-time.</p>
+        <div class="feature-icon-wrapper">⚡</div>
+        <h3>MF-CWI Risk Engine</h3>
+        <p>A unified mathematical algorithm analyzing 5 distinct financial vectors: credit rating, cash buffers, DTI ratios, living expenses, and repayment history.</p>
+        <div style="margin-top: 0.75rem; font-size: 0.775rem; color: #34d399; display: flex; align-items: center; gap: 0.35rem;">
+          <span>✨</span> Soft credit inquiry • No impact on consumer score
+        </div>
       </div>
 
       <div class="glass-card feature-card">
-        <div class="feature-icon">📊</div>
-        <h3>Policy Matching</h3>
-        <p>Matches user credentials against leading institution loan policies. Renders custom rates, terms, and approximate monthly payment amounts.</p>
+        <div class="feature-icon-wrapper">📊</div>
+        <h3>Real-Time Policy Matching</h3>
+        <p>Instant evaluation against leading institutional loan policies (Chase, Bank of America, Wells Fargo) with personalized APR rates, terms, and estimated monthly payments.</p>
       </div>
     </section>
 
     <!-- Mathematical Model Breakdown -->
     <section class="glass-card algorithm-preview">
-      <h2 class="algo-title">How the MF-CWI Algorithm Works</h2>
-      <p style="color: var(--text-secondary); text-align: center; max-width: 700px; margin: 0 auto;">
-        Unlike simple scoring models, the **Multi-Factor Creditworthiness Index (MF-CWI)** runs a normalized multi-criteria assessment weight mapping across 5 distinct financial vectors:
+      <h2 class="algo-title">The Multi-Factor Algorithm (MF-CWI)</h2>
+      <p style="color: var(--text-secondary); text-align: center; max-width: 680px; margin: 0 auto; font-size: 0.95rem;">
+        Moving beyond single credit scores, the MF-CWI model computes an objective, normalized creditworthiness index between 0.00 and 1.00 based on weighted financial dimensions:
       </p>
+
       <div class="algo-grid">
         <div class="algo-factor">
           <div class="factor-weight">40%</div>
           <div class="factor-name">Credit Rating</div>
+          <div class="factor-sub">Soft Inquiry (No Score Impact)</div>
+          <div class="factor-progress-bar">
+            <div class="factor-progress-fill" style="width: 40%;"></div>
+          </div>
         </div>
+
         <div class="algo-factor">
           <div class="factor-weight">25%</div>
-          <div class="factor-name">Debt-to-Income (DTI)</div>
+          <div class="factor-name">DTI Ratio</div>
+          <div class="factor-sub">Debt-to-Income</div>
+          <div class="factor-progress-bar">
+            <div class="factor-progress-fill" style="width: 25%;"></div>
+          </div>
         </div>
+
         <div class="algo-factor">
           <div class="factor-weight">15%</div>
-          <div class="factor-name">Expense-to-Income</div>
+          <div class="factor-name">Expense Ratio</div>
+          <div class="factor-sub">Monthly Burn Rate</div>
+          <div class="factor-progress-bar">
+            <div class="factor-progress-fill" style="width: 15%;"></div>
+          </div>
         </div>
+
         <div class="algo-factor">
           <div class="factor-weight">10%</div>
-          <div class="factor-name">Liquid Cash Buffer</div>
+          <div class="factor-name">Liquid Reserves</div>
+          <div class="factor-sub">3-Month Cash Buffer</div>
+          <div class="factor-progress-bar">
+            <div class="factor-progress-fill" style="width: 10%;"></div>
+          </div>
         </div>
+
         <div class="algo-factor">
           <div class="factor-weight">10%</div>
-          <div class="factor-name">Repayment History</div>
+          <div class="factor-name">Repayment Track</div>
+          <div class="factor-sub">Active Debt Settlement</div>
+          <div class="factor-progress-bar">
+            <div class="factor-progress-fill" style="width: 10%;"></div>
+          </div>
         </div>
       </div>
     </section>
 
-    <footer style="margin-top: 6rem; padding: 2rem 0; border-top: 1px solid var(--glass-border); text-align: center; color: var(--text-secondary); font-size: 0.875rem;">
-      <p>&copy; 2026 Finewise AI. Built using safe data models. All rights reserved.</p>
+    <!-- Footer -->
+    <footer style="margin-top: 5rem; padding: 2.5rem 0; border-top: 1px solid var(--glass-border); text-align: center; color: var(--text-muted); font-size: 0.875rem;">
+      <p>&copy; 2026 Finewise AI. Advanced Credit Intelligence. All rights reserved.</p>
     </footer>
   </div>
 
+  <script>
+    function toggleMobileNav() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('open');
+    }
+  </script>
 </body>
 </html>

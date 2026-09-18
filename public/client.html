@@ -4,35 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Finewise AI - Client Workspace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <!-- Chart.js CDN for interactive visual components -->
+  <!-- Chart.js CDN for visual gauge calculation -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    .workspace-grid {
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      min-height: calc(100vh - 73px);
-    }
-    
-    .client-sidebar {
-      background: var(--bg-secondary);
-      border-right: 1px solid var(--glass-border);
-      padding: 2rem 1rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    
-    .sidebar-menu {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    
     .content-section {
       display: none;
-      animation: fadeIn 0.4s ease-out;
+      animation: fadeIn 0.35s ease-out;
     }
     
     .content-section.active {
@@ -40,13 +21,13 @@
     }
     
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
     
     .gauge-wrapper {
-      max-width: 240px;
-      margin: 1.5rem auto;
+      max-width: 220px;
+      margin: 1.25rem auto;
       position: relative;
     }
 
@@ -59,38 +40,28 @@
     }
 
     .cwi-score {
-      font-size: 2rem;
+      font-size: 2.1rem;
       font-weight: 800;
       color: var(--text-primary);
+      letter-spacing: -0.03em;
     }
 
     .cwi-text {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
+      font-size: 0.725rem;
+      color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
+      font-weight: 600;
     }
     
     .card-grid-2 {
       display: grid;
-      grid-template-columns: 1fr 1.2fr;
+      grid-template-columns: 1fr 1.25fr;
       gap: 1.5rem;
       margin-top: 1.5rem;
     }
 
     @media (max-width: 900px) {
-      .workspace-grid {
-        grid-template-columns: 1fr;
-      }
-      .client-sidebar {
-        border-right: none;
-        border-bottom: 1px solid var(--glass-border);
-        padding: 1rem;
-      }
-      .sidebar-menu {
-        flex-direction: row;
-        flex-wrap: wrap;
-      }
       .card-grid-2 {
         grid-template-columns: 1fr;
       }
@@ -99,59 +70,48 @@
     .form-grid-2 {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
+      gap: 1.25rem;
     }
     
     .suggestion-card {
       border-left: 4px solid var(--accent-purple);
       margin-bottom: 1.25rem;
+      transition: var(--transition);
+    }
+
+    .suggestion-card:hover {
+      transform: translateX(4px);
     }
     
     .suggestion-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.5rem;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
     
     .suggestion-rate {
-      font-size: 1.5rem;
+      font-size: 1.45rem;
       font-weight: 800;
       color: var(--color-success);
-    }
-
-    .user-profile-badge {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.5rem;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--glass-border);
-      border-radius: 8px;
-    }
-
-    .user-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      color: white;
+      background: var(--color-success-bg);
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--border-radius-sm);
+      border: 1px solid var(--color-success-border);
     }
   </style>
 </head>
 <body>
 
-  <!-- Navbar -->
+  <!-- Sticky Navbar -->
   <nav class="navbar">
     <a href="/" class="logo">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M2 17L12 22L22 17" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M2 12L17 12L22 12" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="url(#logoGrad)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2 17L12 22L22 17" stroke="url(#logoGrad)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M2 12L12 17L22 12" stroke="url(#logoGrad)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
         <defs>
           <linearGradient id="logoGrad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
             <stop stop-color="#8B5CF6"/>
@@ -161,18 +121,24 @@
       </svg>
       Finewise AI
     </a>
-    <div class="user-profile-badge">
-      <div class="user-avatar" id="avatar-char">U</div>
-      <div>
-        <div style="font-size: 0.875rem; font-weight: 600;" id="user-display-name">Client</div>
-        <div style="font-size: 0.75rem; color: var(--text-secondary);">Client Account</div>
+
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <div class="user-profile-badge">
+        <div class="user-avatar" id="avatar-char">C</div>
+        <div>
+          <div style="font-size: 0.875rem; font-weight: 600;" id="user-display-name">Client</div>
+          <div style="font-size: 0.725rem; color: var(--text-muted);">Client Workspace</div>
+        </div>
       </div>
+      <button class="hamburger-btn" onclick="toggleSidebarMenu()" aria-label="Toggle Workspace Menu">
+        📂
+      </button>
     </div>
   </nav>
 
   <div class="workspace-grid">
-    <!-- Sidebar -->
-    <aside class="client-sidebar">
+    <!-- Sidebar Navigation -->
+    <aside class="dashboard-sidebar" id="dashboard-sidebar">
       <div class="sidebar-menu">
         <button class="sidebar-btn active" id="btn-overview" onclick="switchSection('overview')">
           <span>📊</span> Dashboard Overview
@@ -191,31 +157,31 @@
         </button>
       </div>
       
-      <button class="sidebar-btn" onclick="handleLogout()" style="color: var(--color-danger); margin-top: auto;">
+      <button class="sidebar-btn btn-danger-outline" onclick="handleLogout()" style="margin-top: 2rem;">
         <span>🚪</span> Sign Out
       </button>
     </aside>
 
-    <!-- Main Workspace -->
+    <!-- Main Content Area -->
     <main class="main-content">
       <div id="global-alert"></div>
 
-      <!-- OVERVIEW SECTION -->
+      <!-- 1. OVERVIEW SECTION -->
       <section id="sect-overview" class="content-section active">
         <div style="margin-bottom: 2rem;">
-          <h2 style="font-size: 1.75rem; font-weight: 700;">Financial Health Dashboard</h2>
-          <p style="color: var(--text-secondary);">Summary risk assessment generated by the MF-CWI Algorithm.</p>
+          <h2 style="font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em;">Financial Health Dashboard</h2>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">Real-time risk scoring and loan eligibility generated by the MF-CWI Algorithm.</p>
         </div>
 
-        <!-- Cards Row -->
+        <!-- Metric Statistics Cards -->
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-title">Approved Loan Limit</div>
             <div class="stat-value" id="val-approved-amount">$0</div>
-            <div class="stat-meta">Based on calculated net capacity</div>
+            <div class="stat-meta">Calculated net repayment capacity</div>
           </div>
           <div class="stat-card">
-            <div class="stat-title">Risk Matrix Category</div>
+            <div class="stat-title">Risk Matrix Tier</div>
             <div class="stat-value" id="val-risk-level">-</div>
             <div class="stat-meta" id="val-risk-subtext">Requires financial profile</div>
           </div>
@@ -225,55 +191,72 @@
             <div class="stat-meta">Monthly debts vs gross income</div>
           </div>
           <div class="stat-card">
-            <div class="stat-title">Proposed Rate Offered</div>
+            <div class="stat-title">Estimated APR Rate</div>
             <div class="stat-value" id="val-roi">0%</div>
-            <div class="stat-meta">Adjusted base risk rate</div>
+            <div class="stat-meta">Risk-adjusted base lending rate</div>
           </div>
         </div>
 
-        <!-- Deep Analysis breakdown charts -->
+        <!-- Gauge & Verdict Section -->
         <div class="card-grid-2">
-          <div class="glass-card">
-            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem; text-align: center;">Creditworthiness Gauge (CWI)</h3>
+          <div class="glass-card" style="text-align: center;">
+            <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem;">Creditworthiness Gauge</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">MF-CWI Normalized Index (0.00 – 1.00)</p>
             <div class="gauge-wrapper">
-              <canvas id="cwiGaugeCanvas" width="240" height="240"></canvas>
+              <canvas id="cwiGaugeCanvas" width="220" height="220"></canvas>
               <div class="cwi-label">
                 <div class="cwi-score" id="gauge-cwi-score">0.00</div>
                 <div class="cwi-text">CWI Score</div>
               </div>
             </div>
-            <p style="font-size: 0.8125rem; color: var(--text-secondary); text-align: center; margin-top: 1rem;">
-              Score is calculated dynamically between 0.00 and 1.00 based on weighted metrics. Target 0.75+ for Low Risk classification.
+            <p style="font-size: 0.825rem; color: var(--text-secondary); margin-top: 0.5rem;">
+              Target <strong>0.75+</strong> for Low Risk tier & premium rates.
             </p>
           </div>
 
           <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
             <div>
-              <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem;">Algorithmic Verdict</h3>
-              <div id="verdict-analysis-box" style="color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.6;">
-                Please navigate to the <strong>Financial Profile</strong> tab, fill out your information, link your bank accounts and previous obligations to initiate the deep credit evaluation.
+              <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem;">Algorithmic Evaluation</h3>
+              <div id="verdict-analysis-box" style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">
+                <div class="empty-state" style="padding: 1.5rem 0;">
+                  <div class="empty-icon">📝</div>
+                  <div class="empty-title">Profile Incomplete</div>
+                  <div class="empty-desc">Complete your financial profile and connect your accounts to generate your AI creditworthiness evaluation.</div>
+                  <button class="btn btn-primary" onclick="switchSection('profile')" style="font-size: 0.875rem;">Set Up Profile</button>
+                </div>
               </div>
             </div>
-            <div style="margin-top: 2rem; border-top: 1px solid var(--glass-border); padding-top: 1.5rem; display: flex; align-items: center; justify-content: space-between;">
-              <span style="font-size: 0.875rem; color: var(--text-secondary);">Qualified Institution Offers:</span>
-              <button class="btn btn-secondary" onclick="switchSection('recommendations')" style="padding: 0.5rem 1rem; font-size: 0.875rem;">View Bank Matches</button>
+            <div style="margin-top: 1.5rem; border-top: 1px solid var(--glass-border); padding-top: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+              <span style="font-size: 0.875rem; color: var(--text-secondary);">Pre-Qualified Policies Available:</span>
+              <button class="btn btn-secondary" onclick="switchSection('recommendations')" style="padding: 0.45rem 1rem; font-size: 0.85rem;">View Bank Offers</button>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- FINANCIAL PROFILE SECTION -->
+      <!-- 2. FINANCIAL PROFILE SECTION -->
       <section id="sect-profile" class="content-section">
         <div style="margin-bottom: 2rem;">
-          <h2 style="font-size: 1.75rem; font-weight: 700;">Financial Profile Data</h2>
-          <p style="color: var(--text-secondary);">State your income, core budget, and target credit score values.</p>
+          <h2 style="font-size: 1.75rem; font-weight: 800;">Financial Profile Data</h2>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">Enter your income, monthly living budget, and credit score.</p>
         </div>
 
-        <div class="glass-card" style="max-width: 680px;">
+        <!-- Soft Check Trust Assurance Banner -->
+        <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1.15rem; background: rgba(52, 211, 153, 0.08); border: 1px solid rgba(52, 211, 153, 0.25); border-radius: var(--border-radius-sm); margin-bottom: 1.5rem; font-size: 0.875rem; color: #34d399; line-height: 1.5;">
+          <span style="font-size: 1.25rem;">🔒</span>
+          <div>
+            <strong>No Credit Score Impact:</strong> Checking your CWI uses a soft inquiry and does not affect your credit score.
+          </div>
+        </div>
+
+        <div class="glass-card" style="max-width: 720px;">
           <form id="profile-form" onsubmit="handleProfileSubmit(event)">
             <div class="form-group">
-              <label class="form-label" for="profile-name">Full Client Name</label>
-              <input type="text" id="profile-name" class="form-control" placeholder="e.g., John Doe" required>
+              <label class="form-label" for="profile-name">
+                <span>Full Client Name</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Required</span>
+              </label>
+              <input type="text" id="profile-name" class="form-control" placeholder="e.g., John Doe" required minlength="2">
             </div>
 
             <div class="form-grid-2">
@@ -283,54 +266,62 @@
               </div>
               <div class="form-group">
                 <label class="form-label" for="profile-expenses">Total Monthly Expenses ($)</label>
-                <input type="number" id="profile-expenses" class="form-control" min="0" placeholder="e.g., 2000" required>
+                <input type="number" id="profile-expenses" class="form-control" min="0" placeholder="e.g., 2200" required>
               </div>
             </div>
 
             <div class="form-grid-2">
               <div class="form-group">
-                <label class="form-label" for="profile-score">TransUnion/Equifax Credit Score</label>
+                <label class="form-label" for="profile-score">
+                  <span>TransUnion / Equifax Score (300-850)</span>
+                  <span style="font-size: 0.725rem; color: #34d399; font-weight: 600;">✨ Soft Check • No score impact</span>
+                </label>
+                <!-- TODO: Self-reported credit score input is currently a prototype placeholder. 
+                     Flag for future integration with a real credit bureau soft-pull API (Experian / Equifax / TransUnion) 
+                     to automatically pull verified scores with zero credit score impact upon user consent. -->
                 <input type="number" id="profile-score" class="form-control" min="300" max="850" placeholder="300 - 850" required>
               </div>
               <div class="form-group">
                 <label class="form-label" for="profile-loan-amount">Desired Loan Amount ($)</label>
-                <input type="number" id="profile-loan-amount" class="form-control" min="0" placeholder="e.g., 25000" required>
+                <input type="number" id="profile-loan-amount" class="form-control" min="1" placeholder="e.g., 25000" required>
               </div>
             </div>
 
             <div class="form-group">
-              <label class="form-label" for="profile-purpose">Loan Target / Purpose</label>
-              <input type="text" id="profile-purpose" class="form-control" placeholder="e.g., Debt consolidation, Home improvements">
+              <label class="form-label" for="profile-purpose">Loan Target / Purpose (Optional)</label>
+              <input type="text" id="profile-purpose" class="form-control" placeholder="e.g., Debt consolidation, Home renovation">
             </div>
 
-            <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Update Profile & Run Assessment</button>
+            <button type="submit" class="btn btn-primary" style="margin-top: 1rem;" id="btn-save-profile">
+              <span>Save & Run AI Assessment</span>
+            </button>
           </form>
         </div>
       </section>
 
-      <!-- BANK ACCOUNTS SECTION -->
+      <!-- 3. BANK ACCOUNTS SECTION -->
       <section id="sect-banks" class="content-section">
         <div style="margin-bottom: 2rem;">
-          <h2 style="font-size: 1.75rem; font-weight: 700;">Linked Bank Accounts</h2>
-          <p style="color: var(--text-secondary);">Add account details. Accounts represent cash buffers and reserves evaluated in calculations.</p>
+          <h2 style="font-size: 1.75rem; font-weight: 800;">Linked Bank Accounts</h2>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">Connect cash balances to establish liquid reserves for MF-CWI reserve calculations.</p>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; align-items: start;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.75rem; align-items: start;">
           <!-- Left side list -->
           <div class="glass-card">
-            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1.25rem;">Linked Accounts Vault</h3>
+            <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem;">Connected Accounts Ledger</h3>
             <div id="bank-accounts-list" class="table-container">
-              <p style="color: var(--text-secondary);">No bank accounts connected yet.</p>
+              <div class="skeleton skeleton-card" style="margin-bottom: 0.5rem;"></div>
             </div>
           </div>
 
           <!-- Right side form -->
           <div class="glass-card">
-            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1.25rem;">Connect Bank Account</h3>
+            <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1.25rem;">Connect New Account</h3>
             <form id="bank-form" onsubmit="handleBankSubmit(event)">
               <div class="form-group">
-                <label class="form-label" for="bank-name">Financial Institution Name</label>
-                <input type="text" id="bank-name" class="form-control" placeholder="e.g., Chase Bank, Wells Fargo" required>
+                <label class="form-label" for="bank-name">Financial Institution</label>
+                <input type="text" id="bank-name" class="form-control" placeholder="e.g., Chase Bank, Wells Fargo" required minlength="2">
               </div>
 
               <div class="form-grid-2">
@@ -343,70 +334,72 @@
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="bank-balance">Current Balance ($)</label>
-                  <input type="number" id="bank-balance" class="form-control" min="0" placeholder="e.g., 5400" required>
+                  <input type="number" id="bank-balance" class="form-control" min="0" placeholder="e.g., 6500" required>
                 </div>
               </div>
 
               <div class="form-grid-2">
                 <div class="form-group">
-                  <label class="form-label" for="bank-number">Account Number</label>
-                  <input type="text" id="bank-number" class="form-control" placeholder="10-12 Digit Account ID" required>
+                  <label class="form-label" for="bank-number">Account Number (8-18 digits)</label>
+                  <input type="text" id="bank-number" class="form-control" placeholder="Account ID" required pattern="\d{8,18}" title="Account number must be 8 to 18 digits.">
                 </div>
                 <div class="form-group">
-                  <label class="form-label" for="bank-routing">Routing Number</label>
-                  <input type="text" id="bank-routing" class="form-control" placeholder="9 Digit Routing ID" required>
+                  <label class="form-label" for="bank-routing">Routing Number (9 digits)</label>
+                  <input type="text" id="bank-routing" class="form-control" placeholder="9-digit routing" required pattern="\d{9}" title="Routing number must be exactly 9 digits.">
                 </div>
               </div>
 
-              <button type="submit" class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">Link Secure Source</button>
+              <button type="submit" class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" id="btn-save-bank">
+                <span>Link Bank Account</span>
+              </button>
             </form>
           </div>
         </div>
       </section>
 
-      <!-- PREVIOUS LOANS SECTION -->
+      <!-- 4. PREVIOUS LOANS SECTION -->
       <section id="sect-loans" class="content-section">
         <div style="margin-bottom: 2rem;">
-          <h2 style="font-size: 1.75rem; font-weight: 700;">Previous & Existing Loans</h2>
-          <p style="color: var(--text-secondary);">State active credit accounts. These represent outstanding debt obligations impacting calculations.</p>
+          <h2 style="font-size: 1.75rem; font-weight: 800;">Previous & Active Loans</h2>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">Declare outstanding loan obligations to accurately calculate your Debt-to-Income (DTI) ratio.</p>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; align-items: start;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.75rem; align-items: start;">
           <!-- Left list -->
           <div class="glass-card">
-            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1.25rem;">Active Debts Ledger</h3>
+            <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem;">Active Obligations Ledger</h3>
             <div id="loans-list" class="table-container">
-              <p style="color: var(--text-secondary);">No previous loan obligations logged.</p>
+              <div class="skeleton skeleton-card"></div>
             </div>
           </div>
 
           <!-- Right form -->
           <div class="glass-card">
-            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1.25rem;">Record Existing Loan</h3>
+            <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1.25rem;">Record Existing Obligation</h3>
             <form id="loan-form" onsubmit="handleLoanSubmit(event)">
               <div class="form-group">
                 <label class="form-label" for="loan-lender">Lender / Creditor Name</label>
-                <input type="text" id="loan-lender" class="form-control" placeholder="e.g., Capital One, Ally Auto" required>
+                <input type="text" id="loan-lender" class="form-control" placeholder="e.g., Capital One, Ally Auto" required minlength="2">
               </div>
 
               <div class="form-grid-2">
                 <div class="form-group">
-                  <label class="form-label" for="loan-amount">Original Principal Borrowed ($)</label>
-                  <input type="number" id="loan-amount" class="form-control" min="0" placeholder="e.g., 20000" required>
+                  <label class="form-label" for="loan-amount">Original Principal ($)</label>
+                  <input type="number" id="loan-amount" class="form-control" min="1" placeholder="e.g., 18000" required>
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="loan-remaining">Remaining Balance ($)</label>
-                  <input type="number" id="loan-remaining" class="form-control" min="0" placeholder="e.g., 14200" required>
+                  <input type="number" id="loan-remaining" class="form-control" min="0" placeholder="e.g., 9400" required>
                 </div>
               </div>
 
               <div class="form-grid-2">
                 <div class="form-group">
-                  <label class="form-label" for="loan-payment">Monthly Installment payment ($)</label>
-                  <input type="number" id="loan-payment" class="form-control" min="0" placeholder="e.g., 350" required>
+                  <label class="form-label" for="loan-payment">Monthly Installment ($)</label>
+                  <input type="number" id="loan-payment" class="form-control" min="0" placeholder="e.g., 320" required>
                 </div>
                 <div class="form-group">
-                  <label class="form-label" for="loan-status">Loan Current Status</label>
+                  <label class="form-label" for="loan-status">Status</label>
                   <select id="loan-status" class="form-control" required>
                     <option value="active">Active Outstanding</option>
                     <option value="paid">Fully Settled (Paid)</option>
@@ -414,33 +407,45 @@
                 </div>
               </div>
 
-              <button type="submit" class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">Log Outstanding Debt</button>
+              <button type="submit" class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" id="btn-save-loan">
+                <span>Log Loan Obligation</span>
+              </button>
             </form>
           </div>
         </div>
       </section>
 
-      <!-- RECOMMENDATIONS SECTION -->
+      <!-- 5. RECOMMENDATIONS SECTION -->
       <section id="sect-recommendations" class="content-section">
         <div style="margin-bottom: 2rem;">
-          <h2 style="font-size: 1.75rem; font-weight: 700;">Matching Bank Policies & Offers</h2>
-          <p style="color: var(--text-secondary);">Below are pre-approved personal loans matching your score and DTI ceilings.</p>
+          <h2 style="font-size: 1.75rem; font-weight: 800;">Matched Bank Policies & Offers</h2>
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">Pre-qualified personalized loan offers generated directly against your credit rating and DTI ceiling.</p>
+          
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.75rem;">
+            <span style="background: rgba(139, 92, 246, 0.12); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.3); font-size: 0.775rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 9999px; display: inline-flex; align-items: center; gap: 0.35rem;">
+              <span>🏦</span> Starter lending partners (Chase, Bank of America, Wells Fargo) — more being added
+            </span>
+          </div>
         </div>
 
-        <div id="recommendations-container" style="max-width: 800px;">
-          <p style="color: var(--text-secondary);">No suggestions available. Please complete profile details first.</p>
+        <div id="recommendations-container" style="max-width: 820px;">
+          <div class="skeleton skeleton-card"></div>
         </div>
       </section>
     </main>
   </div>
 
   <script>
-    // State management
     let token = localStorage.getItem('token');
     let username = localStorage.getItem('username');
     let chartInstance = null;
 
-    // Direct routing safety check
+    function toggleSidebarMenu() {
+      const sidebar = document.getElementById('dashboard-sidebar');
+      sidebar.classList.toggle('mobile-open');
+    }
+
+    // Safety Auth Check
     window.addEventListener('DOMContentLoaded', () => {
       if (!token || localStorage.getItem('role') !== 'client') {
         localStorage.clear();
@@ -449,54 +454,66 @@
       }
       
       document.getElementById('user-display-name').textContent = username || 'Client';
-      document.getElementById('avatar-char').textContent = (username || 'U').charAt(0).toUpperCase();
+      document.getElementById('avatar-char').textContent = (username || 'C').charAt(0).toUpperCase();
 
-      // Initialize defaults
       initGaugeChart(0.00);
       
-      // Fetch data
       fetchProfile();
       fetchBankAccounts();
       fetchLoans();
       fetchAnalysis();
     });
 
-    // Sidebar navigation utility
     function switchSection(sectionId) {
-      document.querySelectorAll('.content-section').forEach(section => {
-        section.classList.remove('active');
-      });
-      document.querySelectorAll('.sidebar-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
+      document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+      document.querySelectorAll('.sidebar-btn').forEach(btn => btn.classList.remove('active'));
       
       document.getElementById(`sect-${sectionId}`).classList.add('active');
-      const targetBtn = document.getElementById(`btn-${sectionId}`);
-      if (targetBtn) targetBtn.classList.add('active');
+      const btn = document.getElementById(`btn-${sectionId}`);
+      if (btn) btn.classList.add('active');
+
+      // Close mobile drawer on item selection
+      const sidebar = document.getElementById('dashboard-sidebar');
+      if (sidebar.classList.contains('mobile-open')) {
+        sidebar.classList.remove('mobile-open');
+      }
     }
 
     function handleLogout() {
       localStorage.clear();
-      window.location.href = '/login.html';
+      window.location.href = '/login.html?role=client';
     }
 
-    // Chart.js Gauge Initializer
+    function showGlobalAlert(type, message) {
+      const container = document.getElementById('global-alert');
+      container.innerHTML = `
+        <div class="alert alert-${type}">
+          <span>${type === 'success' ? '✅' : '❌'}</span>
+          <div>${message}</div>
+        </div>
+      `;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => { container.innerHTML = ''; }, 6000);
+    }
+
+    // Gauge Chart Visualizer
     function initGaugeChart(cwiScore) {
-      const ctx = document.getElementById('cwiGaugeCanvas').getContext('2d');
+      const canvas = document.getElementById('cwiGaugeCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
       
       if (chartInstance) {
         chartInstance.destroy();
       }
 
-      // Render CWI score as semi-doughnut
       chartInstance = new Chart(ctx, {
         type: 'doughnut',
         data: {
           datasets: [{
-            data: [cwiScore, 1 - cwiScore],
+            data: [cwiScore, Math.max(0, 1 - cwiScore)],
             backgroundColor: [
               cwiScore >= 0.75 ? '#10b981' : cwiScore >= 0.50 ? '#f59e0b' : '#ef4444',
-              '#1b233d'
+              '#162037'
             ],
             borderWidth: 0,
             circumference: 180,
@@ -504,7 +521,7 @@
           }]
         },
         options: {
-          cutout: '82%',
+          cutout: '80%',
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
@@ -517,7 +534,7 @@
       document.getElementById('gauge-cwi-score').textContent = cwiScore.toFixed(2);
     }
 
-    // API Call: Retrieve profile details
+    // API: Fetch Profile
     async function fetchProfile() {
       try {
         const response = await fetch('/api/client/profile', {
@@ -526,11 +543,11 @@
         const profile = await response.json();
         
         if (profile) {
-          document.getElementById('profile-name').value = profile.full_name;
-          document.getElementById('profile-income').value = profile.annual_income;
-          document.getElementById('profile-expenses').value = profile.monthly_expenses;
-          document.getElementById('profile-score').value = profile.credit_score;
-          document.getElementById('profile-loan-amount').value = profile.requested_loan_amount;
+          document.getElementById('profile-name').value = profile.full_name || '';
+          document.getElementById('profile-income').value = profile.annual_income || '';
+          document.getElementById('profile-expenses').value = profile.monthly_expenses || '';
+          document.getElementById('profile-score').value = profile.credit_score || '';
+          document.getElementById('profile-loan-amount').value = profile.requested_loan_amount || '';
           document.getElementById('profile-purpose').value = profile.loan_purpose || '';
         }
       } catch (err) {
@@ -538,15 +555,15 @@
       }
     }
 
-    // API Call: Retrieve Bank accounts
+    // API: Fetch Bank Accounts
     async function fetchBankAccounts() {
+      const container = document.getElementById('bank-accounts-list');
       try {
         const response = await fetch('/api/client/bank-accounts', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const accounts = await response.json();
         
-        const container = document.getElementById('bank-accounts-list');
         if (accounts && accounts.length > 0) {
           let html = `
             <table class="custom-table">
@@ -554,7 +571,7 @@
                 <tr>
                   <th>Bank Name</th>
                   <th>Type</th>
-                  <th>Account Number</th>
+                  <th>Account ID</th>
                   <th>Balance</th>
                 </tr>
               </thead>
@@ -562,7 +579,6 @@
           `;
           
           accounts.forEach(acc => {
-            // Mask account numbers for basic layout display, though Client owns this view
             const masked = acc.account_number.length > 4 
               ? '•••• ' + acc.account_number.slice(-4) 
               : acc.account_number;
@@ -570,9 +586,9 @@
             html += `
               <tr>
                 <td><strong>${acc.bank_name}</strong></td>
-                <td>${acc.account_type}</td>
+                <td><span class="badge badge-active">${acc.account_type}</span></td>
                 <td><code>${masked}</code></td>
-                <td style="color: var(--color-success); font-weight: 600;">$${acc.balance.toLocaleString()}</td>
+                <td style="color: var(--color-success); font-weight: 700;">$${acc.balance.toLocaleString()}</td>
               </tr>
             `;
           });
@@ -580,22 +596,28 @@
           html += '</tbody></table>';
           container.innerHTML = html;
         } else {
-          container.innerHTML = '<p style="color: var(--text-secondary);">No bank accounts connected yet. Connect an account to establish liquid assets.</p>';
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-icon">🏦</div>
+              <div class="empty-title">No Accounts Connected</div>
+              <div class="empty-desc">Link a checking or savings account to calculate your liquid reserve buffer.</div>
+            </div>
+          `;
         }
       } catch (err) {
-        console.error('Error fetching bank accounts:', err);
+        container.innerHTML = `<p style="color: var(--color-danger);">Failed to load accounts.</p>`;
       }
     }
 
-    // API Call: Retrieve Loans
+    // API: Fetch Previous Loans
     async function fetchLoans() {
+      const container = document.getElementById('loans-list');
       try {
         const response = await fetch('/api/client/loans', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const loans = await response.json();
         
-        const container = document.getElementById('loans-list');
         if (loans && loans.length > 0) {
           let html = `
             <table class="custom-table">
@@ -603,8 +625,8 @@
                 <tr>
                   <th>Creditor</th>
                   <th>Principal</th>
-                  <th>Remaining</th>
-                  <th>Monthly Payment</th>
+                  <th>Balance</th>
+                  <th>Monthly</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -626,14 +648,20 @@
           html += '</tbody></table>';
           container.innerHTML = html;
         } else {
-          container.innerHTML = '<p style="color: var(--text-secondary);">No previous loan obligations logged.</p>';
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-icon">💼</div>
+              <div class="empty-title">No Loan Obligations Logged</div>
+              <div class="empty-desc">Declare active or settled loans to accurately reflect your credit history.</div>
+            </div>
+          `;
         }
       } catch (err) {
-        console.error('Error fetching loans:', err);
+        container.innerHTML = `<p style="color: var(--color-danger);">Failed to load loans.</p>`;
       }
     }
 
-    // API Call: Fetch analysis results and populate widgets
+    // API: Fetch Analysis Report
     async function fetchAnalysis() {
       try {
         const response = await fetch('/api/client/analysis', {
@@ -641,60 +669,57 @@
         });
         
         if (response.status === 400) {
-          // Profile is missing
           return;
         }
         
         const data = await response.json();
         
-        // Populate stats cards
+        // Update stats
         document.getElementById('val-approved-amount').textContent = data.approved_amount > 0 
           ? `$${data.approved_amount.toLocaleString()}` 
-          : 'Rejected';
+          : 'Declined';
           
         const riskLevelEl = document.getElementById('val-risk-level');
-        riskLevelEl.textContent = data.risk_score;
-        riskLevelEl.className = 'stat-value'; // Reset
+        riskLevelEl.textContent = data.risk_score || '-';
         
-        let riskClass = 'badge-low';
         let riskMsg = 'Excellent credit worthiness profile';
         if (data.risk_score === 'High') {
-          riskClass = 'badge-high';
-          riskMsg = 'Significant risk parameters detected';
+          riskMsg = 'Elevated risk parameters detected';
         } else if (data.risk_score === 'Medium') {
-          riskClass = 'badge-medium';
-          riskMsg = 'Moderate credit worthiness profile';
+          riskMsg = 'Moderate credit stability profile';
         }
-        
         document.getElementById('val-risk-subtext').textContent = riskMsg;
         
         document.getElementById('val-dti').textContent = `${(data.debt_to_income_ratio * 100).toFixed(1)}%`;
         document.getElementById('val-roi').textContent = `${data.interest_rate_offered}%`;
         
-        // Update circular chart
         initGaugeChart(data.cwi || 0.0);
         
-        // Update verdict text
+        // Update verdict box
         const verdictBox = document.getElementById('verdict-analysis-box');
         if (data.approved_amount > 0) {
           verdictBox.innerHTML = `
-            <div style="padding: 1rem; border-radius: 8px; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); margin-bottom: 1rem;">
-              <h4 style="color: #34d399; margin-bottom: 0.25rem;">Approved (Risk Tier: ${data.risk_score})</h4>
-              Based on the MF-CWI index of <strong>${(data.cwi || 0).toFixed(2)}</strong>, your debt-to-income ratio is healthy at <strong>${(data.debt_to_income_ratio * 100).toFixed(1)}%</strong>. You are qualified for up to <strong>$${data.approved_amount.toLocaleString()}</strong> in funding at an estimated base APR of <strong>${data.interest_rate_offered}%</strong>.
+            <div style="padding: 1.25rem; border-radius: var(--border-radius-sm); background: var(--color-success-bg); border: 1px solid var(--color-success-border); margin-bottom: 1rem;">
+              <h4 style="color: #34d399; margin-bottom: 0.35rem; font-size: 1.05rem;">✅ Approved (Tier: ${data.risk_score})</h4>
+              <p style="font-size: 0.925rem; line-height: 1.6; color: var(--text-primary);">
+                Based on your CWI of <strong>${(data.cwi || 0).toFixed(2)}</strong> and healthy DTI of <strong>${(data.debt_to_income_ratio * 100).toFixed(1)}%</strong>, you qualify for up to <strong>$${data.approved_amount.toLocaleString()}</strong> at an estimated base APR of <strong>${data.interest_rate_offered}%</strong>.
+              </p>
             </div>
-            <p>We recommend looking at the matched policy offers from institutions Chase and Bank of America to secure the best ROI rate structure.</p>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">Browse matched institutional offers in the Bank Offers section.</p>
           `;
         } else {
           verdictBox.innerHTML = `
-            <div style="padding: 1rem; border-radius: 8px; background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); margin-bottom: 1rem;">
-              <h4 style="color: #f87171; margin-bottom: 0.25rem;">Declined / Insufficient Capacity</h4>
-              The credit model calculated high outstanding liabilities or insufficient net margin. Your DTI ratio of <strong>${(data.debt_to_income_ratio * 100).toFixed(1)}%</strong> exceeds standard risk boundaries.
+            <div style="padding: 1.25rem; border-radius: var(--border-radius-sm); background: var(--color-danger-bg); border: 1px solid var(--color-danger-border); margin-bottom: 1rem;">
+              <h4 style="color: #f87171; margin-bottom: 0.35rem; font-size: 1.05rem;">⚠️ High Risk / Insufficient Margin</h4>
+              <p style="font-size: 0.925rem; line-height: 1.6; color: var(--text-primary);">
+                The algorithm detected elevated obligations relative to net income. Your DTI of <strong>${(data.debt_to_income_ratio * 100).toFixed(1)}%</strong> exceeds standard risk thresholds.
+              </p>
             </div>
-            <p>Tips: Reduce active outstanding balances on previous credit card accounts or settle active loans to improve your score.</p>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">Tip: Reducing active loan balances or logging additional liquid assets can raise your CWI score.</p>
           `;
         }
         
-        // Build Recommendations list
+        // Populate Bank Offers
         const recContainer = document.getElementById('recommendations-container');
         if (data.recommendations && data.recommendations.length > 0) {
           let html = '';
@@ -703,15 +728,15 @@
               <div class="glass-card suggestion-card">
                 <div class="suggestion-header">
                   <div>
-                    <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--text-primary);">${rec.bankName}</h3>
-                    <span style="font-size: 0.8125rem; color: var(--text-secondary);">Max Limit: $${rec.maxAmount.toLocaleString()} | Term: ${rec.termMonths} Months</span>
+                    <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary);">${rec.bankName}</h3>
+                    <span style="font-size: 0.825rem; color: var(--text-muted);">Max Limit: $${rec.maxAmount.toLocaleString()} | Term: ${rec.termMonths} Months</span>
                   </div>
                   <div class="suggestion-rate">${rec.offeredRate}% APR</div>
                 </div>
-                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">${rec.description}</p>
-                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--glass-border); padding-top: 0.75rem; font-size: 0.875rem;">
-                  <span>Estimated Monthly Payment:</span>
-                  <strong style="color: var(--text-primary); font-size: 1.125rem;">$${rec.estimatedMonthlyPayment.toLocaleString()}</strong>
+                <p style="font-size: 0.925rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.5;">${rec.description}</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--glass-border); padding-top: 0.85rem; font-size: 0.9rem;">
+                  <span style="color: var(--text-muted);">Est. Monthly Payment:</span>
+                  <strong style="color: #c084fc; font-size: 1.15rem;">$${rec.estimatedMonthlyPayment.toLocaleString()}</strong>
                 </div>
               </div>
             `;
@@ -719,8 +744,10 @@
           recContainer.innerHTML = html;
         } else {
           recContainer.innerHTML = `
-            <div class="alert alert-danger" style="margin-top: 1rem;">
-              No pre-approved bank matches found matching your credit score parameters. A minimum rating score of 580 is required.
+            <div class="empty-state">
+              <div class="empty-icon">🔍</div>
+              <div class="empty-title">No Matching Bank Policies</div>
+              <div class="empty-desc">No pre-qualified policy match was found for your score parameters (min. 580 credit score required).</div>
             </div>
           `;
         }
@@ -730,17 +757,20 @@
       }
     }
 
-    // Form Handlers
+    // Form Submissions with Loading States
     async function handleProfileSubmit(event) {
       event.preventDefault();
+      const btn = document.getElementById('btn-save-profile');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Saving & Evaluating...';
       
       const payload = {
-        full_name: document.getElementById('profile-name').value,
+        full_name: document.getElementById('profile-name').value.trim(),
         annual_income: parseFloat(document.getElementById('profile-income').value),
         monthly_expenses: parseFloat(document.getElementById('profile-expenses').value),
         credit_score: parseInt(document.getElementById('profile-score').value),
         requested_loan_amount: parseFloat(document.getElementById('profile-loan-amount').value),
-        loan_purpose: document.getElementById('profile-purpose').value
+        loan_purpose: document.getElementById('profile-purpose').value.trim()
       };
       
       try {
@@ -756,23 +786,29 @@
         const data = await response.json();
         if (!response.ok) throw new Error(data.error);
         
-        showGlobalAlert('success', 'Profile credentials saved. Deep credit analysis refreshed!');
+        showGlobalAlert('success', 'Financial profile saved! AI risk analysis refreshed.');
         await fetchAnalysis();
         switchSection('overview');
       } catch (err) {
         showGlobalAlert('danger', err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Save & Run AI Assessment</span>';
       }
     }
 
     async function handleBankSubmit(event) {
       event.preventDefault();
+      const btn = document.getElementById('btn-save-bank');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Linking Account...';
       
       const payload = {
-        bank_name: document.getElementById('bank-name').value,
+        bank_name: document.getElementById('bank-name').value.trim(),
         account_type: document.getElementById('bank-type').value,
         balance: parseFloat(document.getElementById('bank-balance').value),
-        account_number: document.getElementById('bank-number').value,
-        routing_number: document.getElementById('bank-routing').value
+        account_number: document.getElementById('bank-number').value.trim(),
+        routing_number: document.getElementById('bank-routing').value.trim()
       };
       
       try {
@@ -788,20 +824,26 @@
         const data = await response.json();
         if (!response.ok) throw new Error(data.error);
         
-        showGlobalAlert('success', 'Secure bank account connected!');
+        showGlobalAlert('success', 'Secure bank account connected successfully!');
         document.getElementById('bank-form').reset();
         await fetchBankAccounts();
         await fetchAnalysis();
       } catch (err) {
         showGlobalAlert('danger', err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Link Bank Account</span>';
       }
     }
 
     async function handleLoanSubmit(event) {
       event.preventDefault();
+      const btn = document.getElementById('btn-save-loan');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Logging Loan...';
       
       const payload = {
-        lender_name: document.getElementById('loan-lender').value,
+        lender_name: document.getElementById('loan-lender').value.trim(),
         loan_amount: parseFloat(document.getElementById('loan-amount').value),
         remaining_balance: parseFloat(document.getElementById('loan-remaining').value),
         monthly_payment: parseFloat(document.getElementById('loan-payment').value),
@@ -821,29 +863,17 @@
         const data = await response.json();
         if (!response.ok) throw new Error(data.error);
         
-        showGlobalAlert('success', 'Liability details registered successfully!');
+        showGlobalAlert('success', 'Loan obligation logged successfully!');
         document.getElementById('loan-form').reset();
         await fetchLoans();
         await fetchAnalysis();
       } catch (err) {
         showGlobalAlert('danger', err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Log Loan Obligation</span>';
       }
     }
-
-    // Helper alerts
-    function showGlobalAlert(type, message) {
-      const container = document.getElementById('global-alert');
-      container.innerHTML = `
-        <div class="alert alert-${type}">
-          ${type === 'success' ? '✅' : '❌'} ${message}
-        </div>
-      `;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      setTimeout(() => {
-        container.innerHTML = '';
-      }, 5000);
-    }
   </script>
-
 </body>
 </html>
